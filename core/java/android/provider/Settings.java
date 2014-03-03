@@ -19213,6 +19213,12 @@ public final class Settings {
                 "uids_allowed_on_restricted_networks";
 
         /**
+         * Toast animations
+         * @hide
+         */
+        public static final String TOAST_ANIMATION = "toast_animation";
+
+        /**
          * Global settings that shouldn't be persisted.
          *
          * @hide
