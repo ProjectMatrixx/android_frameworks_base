@@ -64,6 +64,8 @@ import android.os.UserHandle;
 import android.provider.Settings;
 import android.telephony.SubscriptionManager;
 import android.telephony.TelephonyManager;
+import android.view.IWindowManager;
+import android.view.WindowManagerGlobal;
 import android.widget.Toast;
 import android.util.DisplayMetrics;
 import android.text.TextUtils;
@@ -81,6 +83,19 @@ import java.util.HashSet;
 import java.util.List;
 
 public class systemUtils {
+
+    public static final String INTENT_SCREENSHOT = "action_handler_screenshot";
+    public static final String INTENT_REGION_SCREENSHOT = "action_handler_region_screenshot";
+
+
+    public static void takeScreenshot(boolean full) {
+        IWindowManager wm = WindowManagerGlobal.getWindowManagerService();
+        try {
+            wm.sendCustomAction(new Intent(full? INTENT_SCREENSHOT : INTENT_REGION_SCREENSHOT));
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+    }
 
     public static boolean isPackageInstalled(Context context, String packageName, boolean ignoreState) {
         if (packageName != null) {
