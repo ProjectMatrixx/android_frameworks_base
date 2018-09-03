@@ -172,4 +172,7 @@
   <java-symbol type="dimen" name="status_bar_padding_start" />
   <java-symbol type="dimen" name="status_bar_padding_end" />
   <java-symbol type="dimen" name="status_bar_padding_top" />
+
+  <!-- Bootleg unneccesary gradient declaration | Just for our shishu bars -->
+  <java-symbol type="color" name="bootleg_accent_gradient_end_color" />
 </resources>
