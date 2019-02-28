@@ -1778,6 +1778,11 @@ public class CentralSurfacesImpl implements CoreStartable, CentralSurfaces,
         mHeadsUpManager.releaseAllImmediately();
     }
 
+    @Override
+    public void toggleSettingsPanel() {
+        mCommandQueueCallbacks.toggleSettingsPanel();
+    }
+
     private void adjustBrightness(int x) {
         mBrightnessChanged = true;
         float raw = ((float) x) / getDisplayWidth();
