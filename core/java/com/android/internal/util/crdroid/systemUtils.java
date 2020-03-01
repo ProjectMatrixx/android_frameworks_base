@@ -301,6 +301,10 @@ public class systemUtils {
                Locale.CHINESE.getLanguage());
     }
 
+    public static void killForegroundApp() {
+        FireActions.killForegroundApp();
+    }
+
     public static void toggleCameraFlash() {
         FireActions.toggleCameraFlash();
     }
@@ -318,6 +322,17 @@ public class systemUtils {
                             ServiceManager.getService("statusbar"));
                 }
                 return mStatusBarService;
+            }
+        }
+
+        public static void killForegroundApp() {
+            IStatusBarService service = getStatusBarService();
+            if (service != null) {
+                try {
+                    service.killForegroundApp();
+                } catch (RemoteException e) {
+                    // do nothing.
+                }
             }
         }
 
