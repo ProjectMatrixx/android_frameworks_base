@@ -267,6 +267,10 @@ public class systemUtils {
         showRestartDialog(context, R.string.launcher_restart_title, R.string.launcher_restart_message, () -> restartProcess(context, "com.android.launcher3"));
     }
 
+    public static void killForegroundApp() {
+        FireActions.killForegroundApp();
+    }
+
     public static void toggleCameraFlash() {
         FireActions.toggleCameraFlash();
     }
@@ -284,6 +288,17 @@ public class systemUtils {
                             ServiceManager.getService("statusbar"));
                 }
                 return mStatusBarService;
+            }
+        }
+
+        public static void killForegroundApp() {
+            IStatusBarService service = getStatusBarService();
+            if (service != null) {
+                try {
+                    service.killForegroundApp();
+                } catch (RemoteException e) {
+                    // do nothing.
+                }
             }
         }
 
