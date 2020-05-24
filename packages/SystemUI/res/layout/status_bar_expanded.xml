@@ -75,6 +75,12 @@
         android:layout_height="match_parent"
         android:layout_width="match_parent" />
 
+    <include layout="@layout/ambient_custom_image"
+         android:id="@+id/image_container"
+         android:layout_width="match_parent"
+         android:layout_height="match_parent"
+         android:visibility="gone" />
+
     <include layout="@layout/edge_light_layout"
          android:id="@+id/edge_light_container"
          android:layout_width="match_parent"
@@ -82,6 +88,12 @@
          android:visibility="gone"
          android:focusable="false"
          android:clickable="false" />
+
+    <include layout="@layout/ambient_custom_image"
+         android:id="@+id/image_container"
+         android:layout_width="match_parent"
+         android:layout_height="match_parent"
+         android:visibility="gone" />
 
     <include layout="@layout/status_bar_expanded_plugin_frame"/>
 
