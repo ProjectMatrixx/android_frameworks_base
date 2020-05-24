@@ -18,7 +18,7 @@
 
     <!-- Screen Record -->
     <dimen name="screenrecord_dot_size">48dp</dimen>
-    
+
     <!-- Height of the landscape battery icon in the status bar. -->
     <dimen name="status_bar_battery_icon_height_landscape">10.5dp</dimen>
 
@@ -101,4 +101,7 @@
 
     <!-- QS Header height full -->
     <dimen name="qs_header_height_full">200dp</dimen>
+
+     <!-- Base Multiplier for dp to px. -->
+    <dimen name="amb_font_base_multiplier_dp">1dp</dimen>
 </resources>
