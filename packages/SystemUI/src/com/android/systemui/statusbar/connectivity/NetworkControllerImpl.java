@@ -824,6 +824,10 @@ public class NetworkControllerImpl extends BroadcastReceiver
                 case 6:
                     resId = R.drawable.ic_volte_miui;
                     break;
+                // EmUi VoLTE
+                case 7:
+                    resId = R.drawable.ic_volte_emui;
+                    break;
                 // Dynamic
                 case 1:
                 default:
@@ -911,6 +915,10 @@ public class NetworkControllerImpl extends BroadcastReceiver
                 case 6:
                     resId = R.drawable.ic_volte_miui;
                     break;
+                // EmUi VoLTE
+                case 7:
+                    resId = R.drawable.ic_volte_emui;
+                    break;
                  // Dynamic
                 case 1:
                 default:
@@ -980,6 +988,10 @@ public class NetworkControllerImpl extends BroadcastReceiver
                 case 6:
                     resId = R.drawable.ic_volte_miui;
                     break;
+                // EmUi VoLTE
+                case 7:
+                    resId = R.drawable.ic_volte_emui;
+                    break;
                 // Dynamic
                 case 1:
                 default:
@@ -1007,6 +1019,10 @@ public class NetworkControllerImpl extends BroadcastReceiver
                 // MemeUi VoLTE
                 case 6:
                     resId = R.drawable.ic_volte_miui;
+                    break;
+                // EmUi VoLTE
+                case 7:
+                    resId = R.drawable.ic_volte_emui;
                     break;
                 // Dynamic
                 case 1:
@@ -1039,6 +1055,10 @@ public class NetworkControllerImpl extends BroadcastReceiver
                 // MemeUi VoLTE
                 case 6:
                     resId = R.drawable.ic_volte_miui;
+                    break;
+                // EmUi VoLTE
+                case 7:
+                    resId = R.drawable.ic_volte_emui;
                     break;
                 // Dynamic
                 case 1:
