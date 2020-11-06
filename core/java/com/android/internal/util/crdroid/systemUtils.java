@@ -54,6 +54,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.content.pm.ResolveInfo;
 import android.os.PowerManager;
+import android.os.RemoteException;
 import android.os.ServiceManager;
 import android.os.SystemClock;
 import android.os.SystemProperties;
@@ -280,4 +281,35 @@ public class systemUtils {
                Locale.CHINESE.getLanguage());
     }
 
+    public static void toggleCameraFlash() {
+        FireActions.toggleCameraFlash();
+    }
+
+    /**
+     * Keep FireAction methods below this point.
+     * Place calls to methods above this point.
+     */
+    private static final class FireActions {
+        private static IStatusBarService mStatusBarService = null;
+        private static IStatusBarService getStatusBarService() {
+            synchronized (FireActions.class) {
+                if (mStatusBarService == null) {
+                    mStatusBarService = IStatusBarService.Stub.asInterface(
+                            ServiceManager.getService("statusbar"));
+                }
+                return mStatusBarService;
+            }
+        }
+
+        public static void toggleCameraFlash() {
+            IStatusBarService service = getStatusBarService();
+            if (service != null) {
+                try {
+                    service.toggleCameraFlash();
+                } catch (RemoteException e) {
+                    // do nothing.
+                }
+            }
+        }
+    }
 }
