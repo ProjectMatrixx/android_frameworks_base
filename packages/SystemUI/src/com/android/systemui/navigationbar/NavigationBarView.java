@@ -620,6 +620,7 @@ public class NavigationBarView extends FrameLayout implements TunerService.Tunab
             mTransitionListener.onBackAltCleared();
         }
         mImeVisible = visible;
+        mEdgeBackGestureHandler.setImeVisible(visible);
     }
 
     void setDisabledFlags(int disabledFlags, SysUiState sysUiState) {
