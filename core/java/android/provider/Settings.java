@@ -13255,6 +13255,18 @@ public final class Settings {
          */
         public static final String PULSE_SMOOTHING_ENABLED = "pulse_smoothing_enabled";
 
+	/**
+         * Pulse gravity
+         * @hide
+         */
+        public static final String PULSE_CUSTOM_GRAVITY = "pulse_custom_gravity";
+
+        /**
+         * Enable and disable QS Panel visualizer
+         * @hide
+         */
+        public static final String VISUALIZER_CENTER_MIRRORED = "visualizer_center_mirrored";
+
         /**
          * Our GameSpace can't write to device_config directly [GTS]
          * Use this as intermediate to pass device_config property
