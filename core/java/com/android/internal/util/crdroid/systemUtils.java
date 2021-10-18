@@ -45,6 +45,8 @@ import android.location.LocationManager;
 import android.hardware.SensorManager;
 import android.media.AudioManager;
 import android.net.ConnectivityManager;
+import android.net.Network;
+import android.net.NetworkCapabilities;
 import android.net.Uri;
 import android.net.wifi.WifiManager;
 import android.os.Handler;
@@ -247,6 +249,14 @@ public class systemUtils {
     public static boolean isWifiOnly(Context context) {
         ConnectivityManager cm = (ConnectivityManager)context.getSystemService(
                 Context.CONNECTIVITY_SERVICE);
-        return (cm.isNetworkSupported(ConnectivityManager.TYPE_MOBILE) == false);
+        Network[] networks = cm.getAllNetworks();
+
+        for (Network network : networks) {
+            NetworkCapabilities netCaps = cm.getNetworkCapabilities(network);
+            if (netCaps.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)) {
+                return false;
+            }
+        }
+        return true;
     }
 }
