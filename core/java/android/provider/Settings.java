@@ -6612,6 +6612,11 @@ public final class Settings {
         /**
          * @hide
          */
+        public static final String UDFPS_ICON = "udfps_icon";
+
+        /**
+         * @hide
+         */
         public static final String QS_PANEL_STYLE = "qs_panel_style";
 
         /**
