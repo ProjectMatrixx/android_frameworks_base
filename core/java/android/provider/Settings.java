@@ -6363,6 +6363,12 @@ public final class Settings {
         public static final String OMNI_CUSTOM_FP_ICON = "custom_fingerprint_icon";
 
         /**
+         * Whether footer #Matrixx text shows
+         * @hide
+         */
+        public static final String OMNI_FOOTER_TEXT_SHOW = "omni_footer_text_show";
+
+        /**
          * Keys we no longer back up under the current schema, but want to continue to
          * process when restoring historical backup datasets.
          *
@@ -6489,6 +6495,7 @@ public final class Settings {
             PRIVATE_SETTINGS.add(STATUSBAR_TOP_PADDING);
             PRIVATE_SETTINGS.add(AMBIENT_TEXT_COLOR);
             PRIVATE_SETTINGS.add(AMBIENT_TEXT_TYPE_COLOR);
+            PRIVATE_SETTINGS.add(OMNI_FOOTER_TEXT_SHOW);
         }
 
         /**
