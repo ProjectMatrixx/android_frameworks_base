@@ -6335,18 +6335,6 @@ public final class Settings {
         public static final String CLOCK_USE_CUSTOM_FORMAT = "clock_use_custom_format";
 
         /**
-         * Keys we no longer back up under the current schema, but want to continue to
-         * process when restoring historical backup datasets.
-         *
-         * All settings in {@link LEGACY_RESTORE_SETTINGS} array *must* have a non-null validator,
-         * otherwise they won't be restored.
-         *
-         * @hide
-         */
-        public static final String[] LEGACY_RESTORE_SETTINGS = {
-        };
-
-        /**
          * Whether to add left padding on statusbar
          * @hide
          */
@@ -6363,6 +6351,28 @@ public final class Settings {
          * @hide
          */
         public static final String STATUSBAR_TOP_PADDING = "statusbar_top_padding";
+
+        /**
+         * @hide
+         */
+        public static final String OMNI_CUSTOM_FP_ICON_ENABLED = "custom_fp_icon_enabled";
+
+        /**
+         * @hide
+         */
+        public static final String OMNI_CUSTOM_FP_ICON = "custom_fingerprint_icon";
+
+        /**
+         * Keys we no longer back up under the current schema, but want to continue to
+         * process when restoring historical backup datasets.
+         *
+         * All settings in {@link LEGACY_RESTORE_SETTINGS} array *must* have a non-null validator,
+         * otherwise they won't be restored.
+         *
+         * @hide
+         */
+        public static final String[] LEGACY_RESTORE_SETTINGS = {
+        };
 
         /**
          * These are all public system settings
