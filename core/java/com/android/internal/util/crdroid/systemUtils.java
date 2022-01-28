@@ -298,6 +298,16 @@ public class systemUtils {
         FireActions.toggleQsPanel();
     }
 
+    // Launch Power Menu dialog
+    public static void showPowerMenu() {
+        final IWindowManager wm = WindowManagerGlobal.getWindowManagerService();
+        try {
+            wm.showGlobalActions();
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+    }
+
     /**
      * Keep FireAction methods below this point.
      * Place calls to methods above this point.
