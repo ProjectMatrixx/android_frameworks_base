@@ -82,4 +82,9 @@
     <java-symbol type="string" name="config_batterymeterLandBoltPathMiUIPill" />
     <java-symbol type="string" name="config_batterymeterLandPowersavePathMiUIPill" />
     <java-symbol type="string" name="config_batterymeterLandErrorPerimeterPathMiUIPill" />
+
+    <!-- Status bar paddings -->
+    <java-symbol type="dimen" name="status_bar_padding_start" />
+    <java-symbol type="dimen" name="status_bar_padding_end" />
+    <java-symbol type="dimen" name="status_bar_padding_top" />
 </resources>
