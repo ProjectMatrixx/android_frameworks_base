@@ -618,6 +618,7 @@ constructor(
             date.setTextColor(textColorPrimary)
             mShadeCarrierGroup.updateColors(textColorPrimary, colorStateList)
             batteryIcon.updateColors(textColorPrimary, textColorSecondary, textColorPrimary)
+            clock.updateClockSize()
         }
     }
 
