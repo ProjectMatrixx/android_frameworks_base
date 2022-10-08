@@ -6342,6 +6342,12 @@ public final class Settings {
         public static final String CLOCK_USE_CUSTOM_FORMAT = "clock_use_custom_format";
 
         /**
+         * Use doubletap as doze pulse triggers
+         * @hide
+         */
+        public static final String DOZE_TRIGGER_DOUBLETAP = "doze_trigger_doubletap";
+
+        /**
          * Whether to enable smart 5G mode
          * @hide
          */
