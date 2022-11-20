@@ -59,12 +59,15 @@ import android.app.WallpaperManager;
 import android.app.admin.DevicePolicyManager;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.content.res.Configuration;
+import android.content.res.Resources;
+import android.database.ContentObserver;
 import android.graphics.Point;
 import android.hardware.devicestate.DeviceStateManager;
 import android.hardware.display.DisplayManager;
@@ -197,6 +200,7 @@ import com.android.systemui.scrim.ScrimView;
 import com.android.systemui.settings.UserTracker;
 import com.android.systemui.settings.brightness.BrightnessSliderController;
 import com.android.systemui.shade.CameraLauncher;
+import com.android.systemui.shade.NotificationPanelViewController;
 import com.android.systemui.shade.NotificationShadeWindowView;
 import com.android.systemui.shade.NotificationShadeWindowViewController;
 import com.android.systemui.shade.QuickSettingsController;
@@ -549,6 +553,7 @@ public class CentralSurfacesImpl implements CoreStartable, CentralSurfaces,
     private final UserTracker mUserTracker;
     private final Provider<FingerprintManager> mFingerprintManager;
     private final TunerService mTunerService;
+    private final NotificationPanelViewController mNewNotificationPanelViewController;
     private final ActivityStarter mActivityStarter;
 
     private GameSpaceManager mGameSpaceManager;
@@ -638,6 +643,7 @@ public class CentralSurfacesImpl implements CoreStartable, CentralSurfaces,
         }
     }
 
+    private Handler mMainHandler;
     private final DelayableExecutor mMainExecutor;
 
     private int mInteractingWindows;
@@ -773,6 +779,7 @@ public class CentralSurfacesImpl implements CoreStartable, CentralSurfaces,
             ShadeLogger shadeLogger,
             @UiBackground Executor uiBgExecutor,
             ShadeSurface shadeSurface,
+            NotificationPanelViewController newNotificationPanelViewController,
             NotificationMediaManager notificationMediaManager,
             NotificationLockscreenUserManager lockScreenUserManager,
             NotificationRemoteInputManager remoteInputManager,
@@ -835,6 +842,7 @@ public class CentralSurfacesImpl implements CoreStartable, CentralSurfaces,
             LockscreenShadeTransitionController lockscreenShadeTransitionController,
             FeatureFlags featureFlags,
             KeyguardUnlockAnimationController keyguardUnlockAnimationController,
+            @Main Handler mainHandler,
             @Main DelayableExecutor delayableExecutor,
             @Main MessageRouter messageRouter,
             WallpaperManager wallpaperManager,
@@ -884,6 +892,7 @@ public class CentralSurfacesImpl implements CoreStartable, CentralSurfaces,
         mShadeLogger = shadeLogger;
         mUiBgExecutor = uiBgExecutor;
         mShadeSurface = shadeSurface;
+        mNewNotificationPanelViewController = newNotificationPanelViewController;
         mMediaManager = notificationMediaManager;
         mLockscreenUserManager = lockScreenUserManager;
         mRemoteInputManager = remoteInputManager;
@@ -944,6 +953,7 @@ public class CentralSurfacesImpl implements CoreStartable, CentralSurfaces,
         mFeatureFlags = featureFlags;
         mIsShortcutListSearchEnabled = featureFlags.isEnabled(Flags.SHORTCUT_LIST_SEARCH_LAYOUT);
         mKeyguardUnlockAnimationController = keyguardUnlockAnimationController;
+        mMainHandler = mainHandler;
         mMainExecutor = delayableExecutor;
         mMessageRouter = messageRouter;
         mWallpaperManager = wallpaperManager;
@@ -1075,6 +1085,9 @@ public class CentralSurfacesImpl implements CoreStartable, CentralSurfaces,
         }
 
         createAndAddWindows(result);
+
+        mMatXSettingsObserver.observe();
+        mMatXSettingsObserver.update();
 
         // Set up the initial notification state. This needs to happen before CommandQueue.disable()
         setUpPresenter();
@@ -3537,6 +3550,46 @@ public class CentralSurfacesImpl implements CoreStartable, CentralSurfaces,
     @Override
     public boolean isDeviceInteractive() {
         return mDeviceInteractive;
+    }
+
+    private MatXSettingsObserver mMatXSettingsObserver = new MatXSettingsObserver(mMainHandler);
+    private class MatXSettingsObserver extends ContentObserver {
+        MatXSettingsObserver(Handler handler) {
+            super(handler);
+        }
+
+        void observe() {
+            ContentResolver resolver = mContext.getContentResolver();
+            resolver.registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.LOCK_SCREEN_CUSTOM_NOTIF),
+                    false, this, UserHandle.USER_ALL);
+            resolver.registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.LOCKSCREEN_MAX_NOTIF_CONFIG),
+                    false, this, UserHandle.USER_ALL);
+        }
+
+        @Override
+        public void onChange(boolean selfChange, Uri uri) {
+            super.onChange(selfChange, uri);
+            if (uri.equals(Settings.System.getUriFor(Settings.System.LOCK_SCREEN_CUSTOM_NOTIF)) ||
+                uri.equals(Settings.System.getUriFor(Settings.System.LOCKSCREEN_MAX_NOTIF_CONFIG))) {
+                setMaxKeyguardNotifConfig();
+            }
+        }
+
+        public void update() {
+            setMaxKeyguardNotifConfig();
+        }
+    }
+
+    private void setMaxKeyguardNotifConfig() {
+        boolean customMaxKeyguard = Settings.System.getIntForUser(mContext.getContentResolver(),
+            Settings.System.LOCK_SCREEN_CUSTOM_NOTIF, 0, UserHandle.USER_CURRENT) == 1;
+
+        int maxKeyguardNotifConfig = Settings.System.getIntForUser(mContext.getContentResolver(),
+                 Settings.System.LOCKSCREEN_MAX_NOTIF_CONFIG, 3, UserHandle.USER_CURRENT);
+
+        mNewNotificationPanelViewController.updateMaxDisplayedNotifications(customMaxKeyguard);
     }
 
     private final BroadcastReceiver mBannerActionBroadcastReceiver = new BroadcastReceiver() {
