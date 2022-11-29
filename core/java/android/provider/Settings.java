@@ -6988,6 +6988,12 @@ public final class Settings {
         @Readable
         public static final String MAX_MUSIC_VOLUME = "max_music_volume";
 
+        /**        
+         * Haptic feedback on volume panel
+         * @hide
+         */ 
+        public static final String VOLUME_PANEL_HAPTIC_FEEDBACK = "volume_panel_haptic_feedback";
+
         /**
          * Stores the default max volume for {@link android.media.AudioSystem.STREAM_MUSIC}
          * see {@link com.android.server.audio.AudioService} for defaults in priority
