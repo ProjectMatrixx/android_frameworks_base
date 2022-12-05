@@ -26,6 +26,9 @@ import static com.android.systemui.theme.ThemeOverlayApplier.OVERLAY_CATEGORY_AC
 import static com.android.systemui.theme.ThemeOverlayApplier.OVERLAY_CATEGORY_DYNAMIC_COLOR;
 import static com.android.systemui.theme.ThemeOverlayApplier.OVERLAY_CATEGORY_SYSTEM_PALETTE;
 import static com.android.systemui.theme.ThemeOverlayApplier.OVERLAY_COLOR_BOTH;
+import static com.android.systemui.theme.ThemeOverlayApplier.OVERLAY_LUMINANCE_FACTOR;
+import static com.android.systemui.theme.ThemeOverlayApplier.OVERLAY_CHROMA_FACTOR;
+import static com.android.systemui.theme.ThemeOverlayApplier.OVERLAY_TINT_BACKGROUND;
 import static com.android.systemui.theme.ThemeOverlayApplier.OVERLAY_COLOR_INDEX;
 import static com.android.systemui.theme.ThemeOverlayApplier.OVERLAY_COLOR_SOURCE;
 import static com.android.systemui.theme.ThemeOverlayApplier.TIMESTAMP_FIELD;
@@ -125,6 +128,9 @@ public class ThemeOverlayController implements CoreStartable, Dumpable {
     protected static final String OVERLAY_BERRY_BLACK_THEME =
             "com.android.system.theme.black";
     private static final boolean DEBUG = true;
+
+    protected static final int NEUTRAL = 0;
+    protected static final int ACCENT = 1;
 
     private final ThemeOverlayApplier mThemeManager;
     private final UserManager mUserManager;
@@ -684,6 +690,34 @@ public class ThemeOverlayController implements CoreStartable, Dumpable {
         }
     }
 
+    /**
+     * Given a color candidate, return an overlay definition.
+     */
+    protected FabricatedOverlay getOverlay(int color, int type, Style style) {
+        boolean nightMode = (mResources.getConfiguration().uiMode
+                & Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES;
+
+        mColorScheme = new ColorScheme(color, nightMode, style,
+                fetchLuminanceFactorFromSetting(),
+                fetchChromaFactorFromSetting(),
+                fetchTintBackgroundFromSetting(),
+                fetchBgColorFromSetting());
+        String name = type == ACCENT ? "accent" : "neutral";
+
+        FabricatedOverlay overlay = newFabricatedOverlay(name);
+
+        if (type == ACCENT) {
+            assignTonalPaletteToOverlay("accent1", overlay, mColorScheme.getAccent1());
+            assignTonalPaletteToOverlay("accent2", overlay, mColorScheme.getAccent2());
+            assignTonalPaletteToOverlay("accent3", overlay, mColorScheme.getAccent3());
+        } else {
+            assignTonalPaletteToOverlay("neutral1", overlay, mColorScheme.getNeutral1());
+            assignTonalPaletteToOverlay("neutral2", overlay, mColorScheme.getNeutral2());
+        }
+
+        return overlay;
+    }
+
     @VisibleForTesting
     protected boolean isNightMode() {
         return (mResources.getConfiguration().uiMode
@@ -697,7 +731,11 @@ public class ThemeOverlayController implements CoreStartable, Dumpable {
 
     private void createOverlays(int color) {
         boolean nightMode = isNightMode();
-        mColorScheme = new ColorScheme(color, nightMode, mThemeStyle);
+        mColorScheme = new ColorScheme(color, nightMode, mThemeStyle,
+                fetchLuminanceFactorFromSetting(),
+                fetchChromaFactorFromSetting(),
+                fetchTintBackgroundFromSetting(),
+                fetchBgColorFromSetting());
         mNeutralOverlay = createNeutralOverlay();
         mSecondaryOverlay = createAccentOverlay();
 
@@ -723,8 +761,8 @@ public class ThemeOverlayController implements CoreStartable, Dumpable {
         return overlay;
     }
 
-    private void assignTonalPaletteToOverlay(String name, FabricatedOverlay overlay,
-            TonalPalette tonalPalette) {
+    private void assignTonalPaletteToOverlay(String name,
+            FabricatedOverlay overlay, TonalPalette tonalPalette) {
         String resourcePrefix = "android:color/system_" + name;
 
         tonalPalette.getAllShadesMapped().forEach((key, value) -> {
@@ -926,6 +964,53 @@ public class ThemeOverlayController implements CoreStartable, Dumpable {
             }
         }
         return style;
+    }
+
+    private float fetchLuminanceFactorFromSetting() {
+        final String overlayPackageJson = mSecureSettings.getStringForUser(
+                Settings.Secure.THEME_CUSTOMIZATION_OVERLAY_PACKAGES,
+                mUserTracker.getUserId());
+        if (!TextUtils.isEmpty(overlayPackageJson)) {
+            try {
+                JSONObject object = new JSONObject(overlayPackageJson);
+                float res = (float) object.optDouble(OVERLAY_LUMINANCE_FACTOR, 1d);
+                return res != 0f ? res : 1f;
+            } catch (JSONException | IllegalArgumentException e) {
+                Log.i(TAG, "Failed to parse THEME_CUSTOMIZATION_OVERLAY_PACKAGES.", e);
+            }
+        }
+        return 1f;
+    }
+
+    private float fetchChromaFactorFromSetting() {
+        final String overlayPackageJson = mSecureSettings.getStringForUser(
+                Settings.Secure.THEME_CUSTOMIZATION_OVERLAY_PACKAGES,
+                mUserTracker.getUserId());
+        if (!TextUtils.isEmpty(overlayPackageJson)) {
+            try {
+                JSONObject object = new JSONObject(overlayPackageJson);
+                float res = (float) object.optDouble(OVERLAY_CHROMA_FACTOR, 1d);
+                return res != 0f ? res : 1f;
+            } catch (JSONException | IllegalArgumentException e) {
+                Log.i(TAG, "Failed to parse THEME_CUSTOMIZATION_OVERLAY_PACKAGES.", e);
+            }
+        }
+        return 1f;
+    }
+
+    private boolean fetchTintBackgroundFromSetting() {
+        final String overlayPackageJson = mSecureSettings.getStringForUser(
+                Settings.Secure.THEME_CUSTOMIZATION_OVERLAY_PACKAGES,
+                mUserTracker.getUserId());
+        if (!TextUtils.isEmpty(overlayPackageJson)) {
+            try {
+                JSONObject object = new JSONObject(overlayPackageJson);
+                return object.optInt(OVERLAY_TINT_BACKGROUND, 0) == 1;
+            } catch (JSONException | IllegalArgumentException e) {
+                Log.i(TAG, "Failed to parse THEME_CUSTOMIZATION_OVERLAY_PACKAGES.", e);
+            }
+        }
+        return false;
     }
 
     @Override
