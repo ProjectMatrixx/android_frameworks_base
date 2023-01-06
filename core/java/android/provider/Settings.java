@@ -13718,6 +13718,12 @@ public final class Settings {
         public static final String DOZE_DOUBLE_TAP_GESTURE_AMBIENT = "doze_double_tap_gesture_ambient";
 
         /**
+         * Whether to trigger doze for new notifications
+         * @hide
+         */
+        public static final String DOZE_FOR_NOTIFICATIONS = "doze_for_notifications";
+
+        /**
          * Whether to show ambient instead of waking for the pickup gesture
          * Do note quick pickup (device sensor) is already configured to do that
          * @hide
