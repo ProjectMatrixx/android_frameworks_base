@@ -12352,6 +12352,12 @@ public final class Settings {
         public static final String DOZE_SINGLE_TAP_GESTURE_AMBIENT = "doze_single_tap_gesture_ambient";
 
         /**
+         * Whether to trigger doze for new notifications
+         * @hide
+         */
+        public static final String DOZE_FOR_NOTIFICATIONS = "doze_for_notifications";
+
+        /**
          * These entries are considered common between the personal and the managed profile,
          * since the managed profile doesn't get to change them.
          */
