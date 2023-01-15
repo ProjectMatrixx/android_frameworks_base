@@ -73,4 +73,6 @@
     <java-symbol type="string" name="config_batterymeterLandPowersavePathMiUIPill" />
     <java-symbol type="string" name="config_batterymeterLandErrorPerimeterPathMiUIPill" />
 
+    <!-- Enforce DisplayModeDirector to select user preferred resolution -->
+    <java-symbol type="bool" name="config_forceToUseSelectedResolution" />
 </resources>
