@@ -251,5 +251,6 @@ public class SecureSettings {
         Settings.Secure.DOZE_PICK_UP_GESTURE_AMBIENT,
         Settings.Secure.DOZE_SINGLE_TAP_GESTURE_AMBIENT,
         Settings.Secure.IGNORE_AUTH_CONFIRMATION,
+        Settings.Secure.MEDIA_CONTROLS_ALWAYS_SHOW_TIME,
     };
 }
