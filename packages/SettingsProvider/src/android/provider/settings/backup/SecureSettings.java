@@ -263,6 +263,7 @@ public class SecureSettings {
         Settings.Secure.DOZE_DOUBLE_TAP_GESTURE_AMBIENT,
         Settings.Secure.DOZE_PICK_UP_GESTURE_AMBIENT,
         Settings.Secure.DOZE_SINGLE_TAP_GESTURE_AMBIENT,
-        Settings.Secure.CLOCK_LS
+        Settings.Secure.CLOCK_LS,
+        Settings.Secure.MEDIA_CONTROLS_ALWAYS_SHOW_TIME
     };
 }
