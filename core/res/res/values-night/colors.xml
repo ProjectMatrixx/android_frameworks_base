@@ -54,4 +54,7 @@
 
     <!-- Bootleg unneccesary gradient declaration | Just for our shishu bars -->
     <color name="bootleg_accent_gradient_end_color">@*android:color/system_accent3_100</color>
+    
+    <!-- Seekbar progress -->
+    <color name="seekbar_progress_thumb">#FF000000</color>
 </resources>
