@@ -41,6 +41,7 @@ import android.net.Uri;
 import android.net.wifi.WifiManager;
 import android.os.Handler;
 import android.os.Looper;
+import android.content.pm.ResolveInfo;
 import android.os.PowerManager;
 import android.os.SystemClock;
 import android.os.SystemProperties;
