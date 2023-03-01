@@ -164,6 +164,7 @@ public class KeyguardSliceProvider extends SliceProvider implements
     private boolean mShowWeatherSlice;
     private boolean mShowWeatherSliceLocation;
     private boolean mShowWeatherStyle;
+    private int mWeatherBgSelection;
 
     /**
      * Receiver responsible for time ticking and updating the date format.
@@ -218,6 +219,9 @@ public class KeyguardSliceProvider extends SliceProvider implements
             mContentResolver.registerContentObserver(Settings.System.getUriFor(
                     Settings.System.LOCKSCREEN_WEATHER_STYLE), false, this,
                     UserHandle.USER_ALL);
+            mContentResolver.registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.LOCKSCREEN_WEATHER_SELECTION), false, this,
+                    UserHandle.USER_ALL);
             updateShowWeatherSlice();
         }
 
@@ -235,6 +239,9 @@ public class KeyguardSliceProvider extends SliceProvider implements
             mShowWeatherStyle = Settings.System.getIntForUser(mContentResolver,
                     Settings.System.LOCKSCREEN_WEATHER_STYLE,
                     0, UserHandle.USER_CURRENT) == 0;
+            mWeatherBgSelection = Settings.System.getIntForUser(mContentResolver,
+                    Settings.System.LOCKSCREEN_WEATHER_SELECTION,
+                    0, UserHandle.USER_CURRENT);
         }
 
         @Override
