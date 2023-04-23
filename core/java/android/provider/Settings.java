@@ -12910,6 +12910,12 @@ public final class Settings {
         public static final String WINDOW_IGNORE_SECURE = "window_ignore_secure";
 
         /**
+         * Brightness slider styles
+         * @hide
+         */
+        public static final String BRIGHTNESS_SLIDER_STYLE = "brightness_slider_style";
+
+        /**
          * Indicates whether extra dim turns on automatically
          * 0 = disabled (default)
          * 1 = from sunset to sunrise
