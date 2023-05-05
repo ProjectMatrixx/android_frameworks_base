@@ -18,7 +18,6 @@ package com.android.settingslib.display;
 
 import android.util.MathUtils;
 
-/** Utility methods for calculating the display brightness. */
 public class BrightnessUtils {
 
     public static final int GAMMA_SPACE_MIN = 0;
