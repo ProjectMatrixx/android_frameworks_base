@@ -6398,6 +6398,15 @@ public final class Settings {
          */
         public static final String QS_DUAL_TONE = "qs_dual_tone";
 
+	    /**
+         * Enable disable CustomUI
+         *   0 = disabled
+         *   1 = enabled
+         * @author vjspranav
+         * @hide
+         */
+        public static final String CUSTOM_UI_TOGGLE = "custom_ui_toggle";
+
         /**
          * Keys we no longer back up under the current schema, but want to continue to
          * process when restoring historical backup datasets.
@@ -6526,6 +6535,7 @@ public final class Settings {
             PRIVATE_SETTINGS.add(AMBIENT_TEXT_COLOR);
             PRIVATE_SETTINGS.add(AMBIENT_TEXT_TYPE_COLOR);
             PRIVATE_SETTINGS.add(OMNI_FOOTER_TEXT_SHOW);
+            PRIVATE_SETTINGS.add(CUSTOM_UI_TOGGLE);
         }
 
         /**
