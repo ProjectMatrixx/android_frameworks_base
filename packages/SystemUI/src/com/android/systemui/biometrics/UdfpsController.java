@@ -212,11 +212,13 @@ public class UdfpsController implements DozeReceiver, Dumpable {
     private int mSmartPixelsOnPowerSave= 0;
     private final BatteryController mBatteryController;
 
-    private boolean mFrameworkDimming;
-    private int[][] mBrightnessAlphaArray;
-
+    // UDFPS night light
     private boolean mNightModeActive;
     private int mAutoModeState;
+    private ColorDisplayManager colorDisplayManager;
+    
+    private boolean mFrameworkDimming;
+    private int[][] mBrightnessAlphaArray;
 
     @VisibleForTesting
     public static final VibrationAttributes UDFPS_VIBRATION_ATTRIBUTES =
@@ -264,7 +266,6 @@ public class UdfpsController implements DozeReceiver, Dumpable {
         @Override
         public void showUdfpsOverlay(long requestId, int sensorId, int reason,
                 @NonNull IUdfpsOverlayControllerCallback callback) {
-            disableNightMode();
             mFgExecutor.execute(() -> UdfpsController.this.showUdfpsOverlay(
                     new UdfpsControllerOverlay(mContext, mFingerprintManager, mInflater,
                             mWindowManager, mAccessibilityManager, mStatusBarStateController,
@@ -281,7 +282,6 @@ public class UdfpsController implements DozeReceiver, Dumpable {
 
         @Override
         public void hideUdfpsOverlay(int sensorId) {
-            setNightMode(mNightModeActive, mAutoModeState);
             mFgExecutor.execute(() -> {
                 if (mKeyguardUpdateMonitor.isFingerprintDetectionRunning()) {
                     // if we get here, we expect keyguardUpdateMonitor's fingerprintRunningState
@@ -855,6 +855,10 @@ public class UdfpsController implements DozeReceiver, Dumpable {
         if (com.android.internal.util.crdroid.Utils.isPackageInstalled(mContext, "com.crdroid.udfps.animations")) {
             mUdfpsAnimation = new UdfpsAnimation(mContext, mWindowManager, mSensorProps);
         }
+
+	colorDisplayManager = mContext.getSystemService(ColorDisplayManager.class);
+        mAutoModeState = colorDisplayManager.getNightDisplayAutoMode();
+        mNightModeActive = colorDisplayManager.isNightDisplayActivated();
     }
 
     private void updateScreenOffFodState() {
@@ -989,6 +993,8 @@ public class UdfpsController implements DozeReceiver, Dumpable {
         } else {
             Log.v(TAG, "showUdfpsOverlay | the overlay is already showing");
         }
+
+        setNightMode(1);
     }
 
     private void hideUdfpsOverlay() {
@@ -1340,6 +1346,7 @@ public class UdfpsController implements DozeReceiver, Dumpable {
             unconfigureDisplay(view);
         }
         cancelAodSendFingerUpAction();
+        setNightMode(2);
     }
 
     /**
@@ -1357,20 +1364,43 @@ public class UdfpsController implements DozeReceiver, Dumpable {
         void onFingerDown();
     }
 
-    private void disableNightMode() {
-        ColorDisplayManager colorDisplayManager = mContext.getSystemService(ColorDisplayManager.class);
+    /**
+     * 1 - disable night light
+     * 2 - restore settings
+     */
+    private void setNightMode(int state) {
+        switch (state) {
+            case 1:
+                saveNightModeSettings();
+                setNightDisplayActivated(false);
+                break;
+            case 2:
+                restoreNightModeSettings();
+                break;
+            default:
+                break;
+        }
+    }
+    
+    private void saveNightModeSettings() {
         mAutoModeState = colorDisplayManager.getNightDisplayAutoMode();
         mNightModeActive = colorDisplayManager.isNightDisplayActivated();
-        colorDisplayManager.setNightDisplayActivated(false);
     }
 
-    private void setNightMode(boolean activated, int autoMode) {
-        ColorDisplayManager colorDisplayManager = mContext.getSystemService(ColorDisplayManager.class);
-        colorDisplayManager.setNightDisplayAutoMode(0);
-        if (autoMode == 0) {
-            colorDisplayManager.setNightDisplayActivated(activated);
-        } else if (autoMode == 1 || autoMode == 2) {
-            colorDisplayManager.setNightDisplayAutoMode(autoMode);
+    private void setNightDisplayActivated(boolean activated) {
+        colorDisplayManager.setNightDisplayActivated(activated);
+    }
+
+    private void restoreNightModeSettings() {
+        setNightDisplayAutoMode(0);
+        if (mAutoModeState == 0) {
+            setNightDisplayActivated(mNightModeActive);
+        } else if (mAutoModeState == 1 || mAutoModeState == 2) {
+            setNightDisplayAutoMode(mAutoModeState);
         }
+    }
+
+    private void setNightDisplayAutoMode(int mode) {
+        colorDisplayManager.setNightDisplayAutoMode(mode);
     }
 }
