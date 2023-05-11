@@ -6161,6 +6161,11 @@ public final class Settings {
         public static final String SHOW_APP_VOLUME = "show_app_volume";
 
         /**
+         * @hide
+         */
+        public static final String SETTINGS_DASHBOARD_STYLE = "settings_dashboard_style";
+
+        /**
          * Volume dialog timeout. Value in seconds
          * @hide
          */

@@ -28,11 +28,14 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.os.PowerManager;
+import android.os.RemoteException;
+import android.os.ServiceManager;
 import android.os.SystemClock;
 import android.os.SystemProperties;
 
 import com.android.internal.R;
 import java.lang.ref.WeakReference;
+import com.android.internal.statusbar.IStatusBarService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -88,6 +91,48 @@ public class Utils {
         PowerManager pm = (PowerManager) ctx.getSystemService(Context.POWER_SERVICE);
         if (pm!= null) {
             pm.goToSleep(SystemClock.uptimeMillis());
+        }
+    }
+
+
+   public static void showSystemRestartDialog(Context context) {
+        new AlertDialog.Builder(context)
+                .setTitle(R.string.system_restart_title)
+                .setMessage(R.string.system_restart_message)
+                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        restartAndroid(context);
+                    }
+                })
+                .setNegativeButton(R.string.cancel, null)
+                .show();
+    }
+
+    public static void restartAndroid(Context context) {
+        new restartAndroidTask(context).execute();
+    }
+
+    private static class restartAndroidTask extends AsyncTask<Void, Void, Void> {
+
+        public restartAndroidTask(Context context) {
+            super();
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+          IStatusBarService mBarService = IStatusBarService.Stub.asInterface(
+                ServiceManager.getService(Context.STATUS_BAR_SERVICE));
+            try {
+                 try {
+                   Thread.sleep(1000);
+               } catch (InterruptedException e) {}
+                  try {
+                     mBarService.reboot(false, null);
+                   } catch (RemoteException e) {}
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
         }
     }
 
