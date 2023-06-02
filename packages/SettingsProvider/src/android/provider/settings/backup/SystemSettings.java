@@ -101,6 +101,7 @@ public class SystemSettings {
         Settings.System.CAMERA_FLASH_NOTIFICATION,
         Settings.System.SCREEN_FLASH_NOTIFICATION,
         Settings.System.SCREEN_FLASH_NOTIFICATION_COLOR,
-        Settings.System.NAVIGATION_BAR_IME_SPACE
+        Settings.System.NAVIGATION_BAR_IME_SPACE,
+        Settings.System.HAPTIC_ON_SLIDER
     };
 }
