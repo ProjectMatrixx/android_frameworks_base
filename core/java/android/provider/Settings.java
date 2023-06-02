@@ -5188,6 +5188,12 @@ public final class Settings {
          */
         public static final String HARDWARE_HAPTIC_FEEDBACK_INTENSITY =
                 "hardware_haptic_feedback_intensity";
+                
+        /**
+         * Whether do haptic feedback on changed slider value
+         * @hide
+         */
+        public static final String HAPTIC_ON_SLIDER = "haptic_on_slider";
 
         /**
          * Whether keyboard vibration feedback is enabled. The value is boolean (1 or 0).
