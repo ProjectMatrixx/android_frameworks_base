@@ -110,6 +110,7 @@ public class SystemSettings {
         Settings.System.NAVIGATION_BAR_IME_SPACE,
         Settings.System.QS_TILE_LABEL_SIZE,
         Settings.System.MAX_VISIBLE_NOTIFICATION_ICONS,
-        Settings.System.QS_TILE_SECONDARY_LABEL_SIZE
+        Settings.System.QS_TILE_SECONDARY_LABEL_SIZE,
+        Settings.System.HAPTIC_ON_SLIDER
     };
 }
