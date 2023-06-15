@@ -6342,6 +6342,12 @@ public final class Settings {
         public static final String CLOCK_USE_CUSTOM_FORMAT = "clock_use_custom_format";
 
         /**
+         * Whether to enable smart 5G mode
+         * @hide
+         */
+        public static final String SMART_5G = "smart_5g";
+
+        /**
          * Whether to add left padding on statusbar
          * @hide
          */
