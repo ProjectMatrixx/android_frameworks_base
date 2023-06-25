@@ -97,6 +97,7 @@
     <java-symbol type="array" name="config_certifiedBuildProperties" />
     
     <!-- More battery styles -->
+<<<<<<< HEAD
     <java-symbol type="string" name="config_batterymeterLandPerimeterPathBuddy" />
     <java-symbol type="string" name="config_batterymeterLandFillMaskBuddy" />
     <java-symbol type="string" name="config_batterymeterLandBoltPathBuddy" />
@@ -157,4 +158,9 @@
     <java-symbol type="string" name="config_batterymeterLandBoltPathOrigami" />
     <java-symbol type="string" name="config_batterymeterLandPowersavePathOrigami" />
     <java-symbol type="string" name="config_batterymeterLandErrorPerimeterPathOrigami" />
+    <java-symbol type="string" name="config_batterymeterLandPerimeterPathMiUIPill" />
+    <java-symbol type="string" name="config_batterymeterLandFillMaskMiUIPill" />
+    <java-symbol type="string" name="config_batterymeterLandBoltPathMiUIPill" />
+    <java-symbol type="string" name="config_batterymeterLandPowersavePathMiUIPill" />
+    <java-symbol type="string" name="config_batterymeterLandErrorPerimeterPathMiUIPill" />
 </resources>
