@@ -224,7 +224,8 @@ class TonalPalette {
     val allShadesMapped: Map<Int, Int>
     val baseColor: Int
 
-    internal constructor(spec: TonalSpec, seedColor: Int, luminanceFactor: Float = 1f, chromaFactor: Float = 1f) {
+    internal constructor(spec: TonalSpec, seedColor: Int,
+            luminanceFactor: Float = 1f, chromaFactor: Float = 1f) {
         val seedCam = Cam.fromInt(seedColor)
         allShades = spec.shades(seedCam, luminanceFactor, chromaFactor)
         allShadesMapped = shadeKeys.zip(allShades).toMap()
@@ -249,13 +250,13 @@ class TonalPalette {
 }
 
 class ColorScheme(
-    @ColorInt val seed: Int,
-    val darkTheme: Boolean,
-    val style: Style = Style.TONAL_SPOT,
-    val luminanceFactor: Float = 1f,
-    val chromaFactor: Float = 1f,
-    val tintBackground: Boolean = false,
-    @ColorInt val bgSeed: Int? = null
+        @ColorInt val seed: Int,
+        val darkTheme: Boolean,
+        val style: Style = Style.TONAL_SPOT,
+        val luminanceFactor: Float = 1f,
+        val chromaFactor: Float = 1f,
+        val tintBackground: Boolean = false,
+        @ColorInt val bgSeed: Int? = null
 ) {
 
     val accent1: TonalPalette
@@ -268,21 +269,26 @@ class ColorScheme(
             luminanceFactor: Float = 1f, chromaFactor: Float = 1f, tintBackground: Boolean = false):
             this(seed, darkTheme, style, luminanceFactor, chromaFactor, tintBackground, null)
 
-    constructor(@ColorInt seed: Int, darkTheme: Boolean):
+    constructor(@ColorInt seed: Int, darkTheme: Boolean) :
             this(seed, darkTheme, Style.TONAL_SPOT)
 
     @JvmOverloads
     constructor(
-        wallpaperColors: WallpaperColors,
-        darkTheme: Boolean,
-        style: Style = Style.TONAL_SPOT,
-        luminanceFactor: Float = 1f,
-        chromaFactor: Float = 1f,
-        tintBackground: Boolean = false,
-        bgSeed: Int? = null
-    ):
+            wallpaperColors: WallpaperColors,
+            darkTheme: Boolean,
+            style: Style = Style.TONAL_SPOT,
+            luminanceFactor: Float = 1f,
+            chromaFactor: Float = 1f,
+            tintBackground: Boolean = false,
+            bgSeed: Int? = null
+    ) :
             this(getSeedColor(wallpaperColors, style != Style.CONTENT),
                     darkTheme, style, luminanceFactor, chromaFactor, tintBackground, bgSeed)
+
+    val allHues: List<TonalPalette>
+        get() {
+            return listOf(accent1, accent2, accent3, neutral1, neutral2)
+        }
 
     val allAccentColors: List<Int>
         get() {
@@ -308,15 +314,13 @@ class ColorScheme(
         get() = ColorUtils.setAlphaComponent(if (darkTheme) accent1.s100 else accent1.s500, 0xFF)
 
     init {
-        val proposedSeedCam = Cam.fromInt(if (customSeed == null) seed else customSeed)
-        val seedArgb = if (customSeed == null) {
-            seed
-        } else if (customSeed == Color.TRANSPARENT) {
+        val proposedSeedCam = Cam.fromInt(seed)
+        val seedArgb = if (seed == Color.TRANSPARENT) {
             GOOGLE_BLUE
         } else if (style != Style.CONTENT && proposedSeedCam.chroma < 5) {
             GOOGLE_BLUE
         } else {
-            customSeed
+            seed
         }
 
         val proposedBgSeedCam = Cam.fromInt(if (bgSeed == null) seed else bgSeed)
@@ -330,15 +334,13 @@ class ColorScheme(
             bgSeed
         }
 
-        val camSeed = Cam.fromInt(seedArgb)
-        accent1 = style.coreSpec.a1.shades(camSeed, luminanceFactor, chromaFactor)
-        accent2 = style.coreSpec.a2.shades(camSeed)
-        accent3 = style.coreSpec.a3.shades(camSeed)
-        val camBgSeed = Cam.fromInt(bgSeedArgb)
-        neutral1 = style.coreSpec.n1.shades(camBgSeed,
+        accent1 = TonalPalette(style.coreSpec.a1, seedArgb, luminanceFactor, chromaFactor)
+        accent2 = TonalPalette(style.coreSpec.a2, seedArgb)
+        accent3 = TonalPalette(style.coreSpec.a3, seedArgb)
+        neutral1 = TonalPalette(style.coreSpec.n1, bgSeedArgb,
                 if (tintBackground) luminanceFactor else 1f,
                 if (tintBackground) chromaFactor else 1f)
-        neutral2 = style.coreSpec.n2.shades(camBgSeed)
+        neutral2 = TonalPalette(style.coreSpec.n2, bgSeedArgb)
     }
 
     val shadeCount get() = this.accent1.allShades.size
