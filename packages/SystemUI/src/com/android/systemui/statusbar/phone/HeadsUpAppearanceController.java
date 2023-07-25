@@ -216,14 +216,14 @@ public class HeadsUpAppearanceController extends ViewController<HeadsUpStatusBar
             boolean animateIsolation = false;
             if (newEntry == null) {
                 // no heads up anymore, lets start the disappear animation
-                mNotificationPanelViewController.reTickerView(false);
-                setShown(false);
+                mNotificationPanelViewController.hideReticker();
+                setShown(false, null);
                 animateIsolation = !isExpanded();
             } else if (previousEntry == null) {
                 // We now have a headsUp and didn't have one before. Let's start the disappear
                 // animation
-                mNotificationPanelViewController.reTickerView(true);
-                setShown(true);
+                mNotificationPanelViewController.updateReticker(newEntry);
+                setShown(true, newEntry);
                 animateIsolation = !isExpanded();
             }
             updateIsolatedIconLocation(false /* requireUpdate */);
@@ -232,7 +232,7 @@ public class HeadsUpAppearanceController extends ViewController<HeadsUpStatusBar
         }
     }
 
-    private void setShown(boolean isShown) {
+    private void setShown(boolean isShown, NotificationEntry newEntry) {
         if (mShown != isShown) {
             View clockView = mClockController.getClock();
             boolean isClock = clockView != null &&
