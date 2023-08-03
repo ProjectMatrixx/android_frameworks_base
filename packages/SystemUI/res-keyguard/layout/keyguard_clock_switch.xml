@@ -59,6 +59,7 @@
             android:id="@+id/weather_container"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:paddingStart="28dp"
             android:visibility="gone" />
 
       <com.android.systemui.statusbar.phone.NotificationIconContainer
