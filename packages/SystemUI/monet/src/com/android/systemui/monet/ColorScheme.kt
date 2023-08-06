@@ -164,50 +164,50 @@ enum class Style(internal val coreSpec: CoreSpec) {
             a1 = TonalSpec(HueSource(), ChromaConstant(12.0)),
             a2 = TonalSpec(HueSource(), ChromaConstant(8.0)),
             a3 = TonalSpec(HueSource(), ChromaConstant(16.0)),
-            n1 = TonalSpec(HueSource(), ChromaConstant(2.0)),
-            n2 = TonalSpec(HueSource(), ChromaConstant(2.0))
+            n1 = TonalSpec(HueSource(), ChromaConstant(.0)),
+            n2 = TonalSpec(HueSource(), ChromaConstant(.0))
     )),
     TONAL_SPOT(CoreSpec(
             a1 = TonalSpec(HueSource(), ChromaConstant(36.0)),
             a2 = TonalSpec(HueSource(), ChromaConstant(16.0)),
             a3 = TonalSpec(HueAdd(60.0), ChromaConstant(24.0)),
-            n1 = TonalSpec(HueSource(), ChromaConstant(4.0)),
-            n2 = TonalSpec(HueSource(), ChromaConstant(8.0))
+            n1 = TonalSpec(HueSource(), ChromaConstant(.0)),
+            n2 = TonalSpec(HueSource(), ChromaConstant(.0))
     )),
     VIBRANT(CoreSpec(
             a1 = TonalSpec(HueSource(), ChromaMaxOut()),
             a2 = TonalSpec(HueVibrantSecondary(), ChromaConstant(24.0)),
             a3 = TonalSpec(HueVibrantTertiary(), ChromaConstant(32.0)),
-            n1 = TonalSpec(HueSource(), ChromaConstant(10.0)),
-            n2 = TonalSpec(HueSource(), ChromaConstant(12.0))
+            n1 = TonalSpec(HueSource(), ChromaConstant(.0)),
+            n2 = TonalSpec(HueSource(), ChromaConstant(.0))
     )),
     EXPRESSIVE(CoreSpec(
             a1 = TonalSpec(HueAdd(240.0), ChromaConstant(40.0)),
             a2 = TonalSpec(HueExpressiveSecondary(), ChromaConstant(24.0)),
             a3 = TonalSpec(HueExpressiveTertiary(), ChromaConstant(32.0)),
-            n1 = TonalSpec(HueAdd(15.0), ChromaConstant(8.0)),
-            n2 = TonalSpec(HueAdd(15.0), ChromaConstant(12.0))
+            n1 = TonalSpec(HueSource(), ChromaConstant(.0)),
+            n2 = TonalSpec(HueSource(), ChromaConstant(.0))
     )),
     RAINBOW(CoreSpec(
             a1 = TonalSpec(HueSource(), ChromaConstant(48.0)),
             a2 = TonalSpec(HueSource(), ChromaConstant(16.0)),
             a3 = TonalSpec(HueAdd(60.0), ChromaConstant(24.0)),
-            n1 = TonalSpec(HueSource(), ChromaConstant(0.0)),
-            n2 = TonalSpec(HueSource(), ChromaConstant(0.0))
+            n1 = TonalSpec(HueSource(), ChromaConstant(.0)),
+            n2 = TonalSpec(HueSource(), ChromaConstant(.0))
     )),
     FRUIT_SALAD(CoreSpec(
             a1 = TonalSpec(HueSubtract(50.0), ChromaConstant(48.0)),
             a2 = TonalSpec(HueSubtract(50.0), ChromaConstant(36.0)),
             a3 = TonalSpec(HueSource(), ChromaConstant(36.0)),
-            n1 = TonalSpec(HueSource(), ChromaConstant(10.0)),
-            n2 = TonalSpec(HueSource(), ChromaConstant(16.0))
+            n1 = TonalSpec(HueSource(), ChromaConstant(.0)),
+            n2 = TonalSpec(HueSource(), ChromaConstant(.0))
     )),
     CONTENT(CoreSpec(
             a1 = TonalSpec(HueSource(), ChromaSource()),
             a2 = TonalSpec(HueSource(), ChromaMultiple(0.33)),
             a3 = TonalSpec(HueSource(), ChromaMultiple(0.66)),
-            n1 = TonalSpec(HueSource(), ChromaMultiple(0.0833)),
-            n2 = TonalSpec(HueSource(), ChromaMultiple(0.1666))
+            n1 = TonalSpec(HueSource(), ChromaConstant(.0)),
+            n2 = TonalSpec(HueSource(), ChromaConstant(.0))
     )),
     MONOCHROMATIC(CoreSpec(
             a1 = TonalSpec(HueSource(), ChromaConstant(.0)),
