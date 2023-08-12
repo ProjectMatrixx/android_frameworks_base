@@ -130,7 +130,7 @@ public abstract class LogoImage extends ImageView {
         switch (mLogoStyle) {
             case 0:
             default:
-                drawable = mContext.getResources().getDrawable(R.drawable.ic_crdroid_logo);
+                drawable = mContext.getResources().getDrawable(R.drawable.ic_matrixx_logo);
                 break;
             case 1:
                 drawable = mContext.getResources().getDrawable(R.drawable.ic_android_logo);
