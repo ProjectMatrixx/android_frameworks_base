@@ -44,4 +44,7 @@
     <dimen name="status_bar_battery_icon_height_landscape_origami">12.0dip</dimen>
     <dimen name="status_bar_battery_icon_height_landscape_miui_pill">12.0dip</dimen>
     <dimen name="status_bar_battery_icon_width_landscape_miui_pill">24.0dip</dimen>
+
+    <!-- Base Multiplier for dp to px. -->
+    <dimen name="amb_font_base_multiplier_dp">1dp</dimen>
 </resources>
