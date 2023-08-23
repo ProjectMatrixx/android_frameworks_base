@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     Copyright (C) 2023-2024 Project Matrixx
+     SPDX-License-Identifier: Apache-2.0
+-->
+
+<resources>
+
+    <!-- Base Multiplier for dp to px. -->
+    <dimen name="amb_font_base_multiplier_dp">1dp</dimen>
+</resources>

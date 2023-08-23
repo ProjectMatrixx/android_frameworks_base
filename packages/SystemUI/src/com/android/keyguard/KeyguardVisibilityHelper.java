@@ -24,6 +24,9 @@ import android.util.Property;
 import android.view.View;
 
 import com.android.app.animation.Interpolators;
+import com.android.systemui.R;
+import com.android.systemui.custom.AmbientText;
+import com.android.systemui.custom.AmbientCustomImage;
 import com.android.systemui.log.LogBuffer;
 import com.android.systemui.log.core.LogLevel;
 import com.android.systemui.statusbar.StatusBarState;
@@ -56,6 +59,10 @@ public class KeyguardVisibilityHelper {
     private final AnimationProperties mAnimationProperties = new AnimationProperties();
     private final LogBuffer mLogBuffer;
 
+    // Ambient Customization
+    private AmbientText mAmbientText;
+    private AmbientCustomImage mAmbientCustomImage;
+
     public KeyguardVisibilityHelper(View view,
             KeyguardStateController keyguardStateController,
             DozeParameters dozeParameters,
@@ -67,6 +74,8 @@ public class KeyguardVisibilityHelper {
         mDozeParameters = dozeParameters;
         mScreenOffAnimationController = screenOffAnimationController;
         mAnimateYPos = animateYPos;
+        mAmbientText = (AmbientText) mView.findViewById(R.id.text_container);
+        mAmbientCustomImage = (AmbientCustomImage) mView.findViewById(R.id.image_container);
         mLogBuffer = logBuffer;
     }
 
@@ -104,10 +113,34 @@ public class KeyguardVisibilityHelper {
             AnimationProperties animProps = new AnimationProperties()
                     .setCustomInterpolator(View.ALPHA, Interpolators.ALPHA_OUT)
                     .setAnimationEndAction(mSetGoneEndAction);
+            if (mAmbientCustomImage != null) {
+                mAmbientCustomImage.animate()
+                    .alpha(0f)
+                    .setStartDelay(0)
+                    .setDuration(160);
+            }
+            if (mAmbientText != null) {
+                mAmbientText.animate()
+                    .alpha(0f)
+                    .setStartDelay(0)
+                    .setDuration(160);
+            }
             if (keyguardFadingAway) {
                 animProps
                         .setDelay(mKeyguardStateController.getKeyguardFadingAwayDelay())
                         .setDuration(mKeyguardStateController.getShortenedFadingAwayDuration());
+                if (mAmbientCustomImage != null) {
+                    mAmbientCustomImage.animate()
+                        .setStartDelay(mKeyguardStateController.getKeyguardFadingAwayDelay())
+                        .setDuration(mKeyguardStateController.getShortenedFadingAwayDuration())
+                        .start();
+                }
+                if (mAmbientText != null) {
+                    mAmbientText.animate()
+                        .setStartDelay(mKeyguardStateController.getKeyguardFadingAwayDelay())
+                        .setDuration(mKeyguardStateController.getShortenedFadingAwayDuration())
+                        .start();
+                }
                 log("goingToFullShade && keyguardFadingAway");
             } else {
                 animProps.setDelay(0).setDuration(160);
@@ -132,6 +165,20 @@ public class KeyguardVisibilityHelper {
                             .setAnimationEndAction(
                                     property -> mSetVisibleEndRunnable.run()),
                     true /* animate */);
+            if (mAmbientCustomImage != null) {
+                mAmbientCustomImage.setAlpha(0f);
+                mAmbientCustomImage.animate()
+                    .alpha(1f)
+                    .setStartDelay(0)
+                    .setDuration(320);
+            }
+            if (mAmbientText != null) {
+                mAmbientText.setAlpha(0f);
+                mAmbientText.animate()
+                    .alpha(1f)
+                    .setStartDelay(0)
+                    .setDuration(320);
+            }
             log("keyguardFadingAway transition w/ Y Aniamtion");
         } else if (statusBarState == KEYGUARD) {
             // Sometimes, device will be unlocked and then locked very quickly.
@@ -170,6 +217,14 @@ public class KeyguardVisibilityHelper {
                         mView, AnimatableProperty.ALPHA, 0f,
                         animProps,
                         true /* animate */);
+                if (mAmbientCustomImage != null) {
+                    mAmbientCustomImage.animate().alpha(0).setDuration(125)
+                        .setStartDelay(0).start();
+                }
+                if (mAmbientText != null) {
+                    mAmbientText.animate().alpha(0).setDuration(125)
+                        .setStartDelay(0).start();
+                }
             } else if (mScreenOffAnimationController.shouldAnimateInKeyguard()) {
                 if (migrateClocksToBlueprint()) {
                     log("Using GoneToAodTransition");
@@ -185,6 +240,12 @@ public class KeyguardVisibilityHelper {
             } else {
                 log("Direct set Visibility to VISIBLE");
                 mView.setVisibility(View.VISIBLE);
+                if (mAmbientCustomImage != null) {
+                    mAmbientCustomImage.setAlpha(1f);
+                }
+                if (mAmbientText != null) {
+                    mAmbientText.setAlpha(1f);
+                }
             }
         } else {
             if (migrateClocksToBlueprint()) {
@@ -193,9 +254,14 @@ public class KeyguardVisibilityHelper {
                 log("Direct set Visibility to GONE");
                 mView.setVisibility(View.GONE);
                 mView.setAlpha(1f);
+            if (mAmbientCustomImage != null) {
+                mAmbientCustomImage.setAlpha(1f);
+            }
+            if (mAmbientText != null) {
+                mAmbientText.setAlpha(1f);
             }
         }
-
+    }
         mLastOccludedState = isOccluded;
     }
 
