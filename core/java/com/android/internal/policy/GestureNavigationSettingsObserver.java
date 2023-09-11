@@ -42,6 +42,7 @@ public class GestureNavigationSettingsObserver extends ContentObserver {
     private Runnable mOnChangeRunnable;
     private Handler mMainHandler;
     private IntentFilter mIntentFilter;
+    private boolean mRegistered = false;
 
     public GestureNavigationSettingsObserver(Handler handler, Context context,
             Runnable onChangeRunnable) {
@@ -141,6 +142,7 @@ public class GestureNavigationSettingsObserver extends ContentObserver {
      */
     public void register() {
         mContext.registerReceiver(mBroadcastReceiver, mIntentFilter);
+        mRegistered = true;
         ContentResolver r = mContext.getContentResolver();
         r.registerContentObserver(
                 Settings.System.getUriFor(Settings.System.LONG_BACK_SWIPE_TIMEOUT),
@@ -202,7 +204,9 @@ public class GestureNavigationSettingsObserver extends ContentObserver {
     }
 
     public void unregister() {
-        mContext.unregisterReceiver(mBroadcastReceiver);
+        if (mRegistered) {
+            mContext.unregisterReceiver(mBroadcastReceiver);
+        }
         mContext.getContentResolver().unregisterContentObserver(this);
         DeviceConfig.removeOnPropertiesChangedListener(mOnPropertiesChangedListener);
     }
