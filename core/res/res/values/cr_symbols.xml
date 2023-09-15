@@ -167,4 +167,7 @@
    <!-- Settings Restart -->
    <java-symbol type="string" name="settings_restart_title" />
    <java-symbol type="string" name="settings_restart_message" />
+
+    <!-- Smart 5G -->
+    <java-symbol type="bool" name="config_supportSmart5G" />
 </resources>

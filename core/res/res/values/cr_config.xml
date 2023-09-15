@@ -164,4 +164,7 @@
 
     <!-- Enforce DisplayModeDirector to select user preferred resolution -->
     <bool name="config_forceToUseSelectedResolution">false</bool>
+
+     <!-- Smart 5G -->
+    <bool name="config_supportSmart5G">false</bool>
 </resources>
