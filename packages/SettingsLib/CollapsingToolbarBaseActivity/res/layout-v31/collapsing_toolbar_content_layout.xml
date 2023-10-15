@@ -14,54 +14,90 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<merge
+<androidx.coordinatorlayout.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@id/content_parent"
+    android:fitsSystemWindows="true"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">    
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/app_bar"
-        android:layout_width="match_parent"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:fitsSystemWindows="true"
         android:outlineAmbientShadowColor="@android:color/transparent"
         android:outlineSpotShadowColor="@android:color/transparent"
-        android:background="@android:color/transparent"
+        android:background="@color/xd_base_layout_header"
         android:theme="@style/Theme.CollapsingToolbar.Settings">
 
         <com.google.android.material.appbar.CollapsingToolbarLayout
             android:id="@+id/collapsing_toolbar"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/settingslib_toolbar_layout_height"
+            android:layout_height="@dimen/xd_toolbar_height"
             android:clipToPadding="false"
             app:forceApplySystemWindowInsetTop="true"
             app:extraMultilineHeightEnabled="true"
-            app:contentScrim="@color/settingslib_colorPrimaryBackground"
-            app:maxLines="3"
+            app:contentScrim="@android:color/transparent"
+            app:maxLines="2"
             app:layout_scrollFlags="scroll|exitUntilCollapsed|snap"
             app:scrimAnimationDuration="50"
             app:scrimVisibleHeightTrigger="@dimen/settingslib_scrim_visible_height_trigger"
             app:statusBarScrim="@null"
-            app:titleCollapseMode="scale"
-            app:collapsedTitleTextAppearance="@style/CollapsingToolbarTitle.Collapsed"
-            app:expandedTitleTextAppearance="@style/CollapsingToolbarTitle.Expanded"
-            app:expandedTitleMarginStart="@dimen/expanded_title_margin_start"
-            app:expandedTitleMarginEnd="@dimen/expanded_title_margin_end"
-            app:toolbarId="@id/action_bar">
+            app:titleCollapseMode="fade"
+            app:collapsedTitleTextAppearance="@style/xd_toolbar.Collapsed"
+            app:expandedTitleTextAppearance="@style/xd_toolbar.Expanded"
+            app:expandedTitleMarginStart="@dimen/xd_toolbar_expanded_title_margin_start"
+            app:expandedTitleMarginEnd="@dimen/xd_toolbar_expanded_title_margin_end"
+            app:toolbarId="@id/action_bar"
+            app:expandedTitleGravity="bottom|center_horizontal">
 
             <Toolbar
                 android:id="@+id/action_bar"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                android:theme="?android:attr/actionBarTheme"
+                android:layout_width="fill_parent"
+                android:layout_height="?actionBarSize"
+                android:theme="?android:actionBarTheme"
                 android:transitionName="shared_element_view"
+                android:layout_marginTop="4dp"
+                android:contentInsetStartWithNavigation="0dp"
+                android:navigationIcon="@drawable/xd_back_arrow"                
                 app:layout_collapseMode="pin"/>
 
         </com.google.android.material.appbar.CollapsingToolbarLayout>
     </com.google.android.material.appbar.AppBarLayout>
 
     <FrameLayout
-        android:id="@+id/content_frame"
-        android:layout_width="match_parent"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
-</merge>
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" >
+
+          <androidx.cardview.widget.CardView
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:layout_marginTop="25dp"
+              android:layout_marginStart="@dimen/xd_pref_card_horizontal_padding"
+              android:layout_marginEnd="@dimen/xd_pref_card_horizontal_padding"
+              app:cardBackgroundColor="@android:color/transparent"
+              app:cardCornerRadius="@dimen/xd_pref_card_radius"
+              app:cardElevation="0dp">
+
+            <FrameLayout
+              android:id="@id/content_frame"
+              android:layout_width="fill_parent"
+              android:layout_height="wrap_content"
+              android:layout_marginStart="@dimen/xd_pref_card_horizontal_padding-negative"
+              android:layout_marginEnd="@dimen/xd_pref_card_horizontal_padding-negative"/>
+
+          </androidx.cardview.widget.CardView>
+      </FrameLayout>
+
+      <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="25dp"
+        android:background="@drawable/xd_base_layout_round_mask"
+        app:layout_anchor="@id/app_bar"
+        app:layout_anchorGravity="bottom"
+        android:layout_gravity="bottom"/>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
