@@ -78,7 +78,7 @@
 
     <!-- The default tiles to display in QuickSettings -->
     <string name="quick_settings_tiles_default" translatable="false">
-        internet,bt,flashlight,dnd,alarm,airplane,nfc,rotation,battery,controls,wallet,cast,screenrecord,custom(com.android.permissioncontroller/.permission.service.SafetyCenterQsTileService)
+        wifi,cell,bt,dataswitch,rotation,flashlight,caffeine,alarm,airplane,nfc,controls,wallet,cast,screenrecord,custom(com.android.permissioncontroller/.permission.service.SafetyCenterQsTileService)
     </string>
 
     <!-- The class path of the Safety Quick Settings Tile -->
