@@ -55,7 +55,6 @@ import com.android.systemui.plugins.qs.QSIconView
 import com.android.systemui.plugins.qs.QSTile
 import com.android.systemui.plugins.qs.QSTile.BooleanState
 import com.android.systemui.plugins.qs.QSTileView
-import com.android.systemui.qs.TileUtils
 import com.android.systemui.qs.logging.QSLogger
 import com.android.systemui.qs.tileimpl.QSIconViewImpl.QS_ANIM_LENGTH
 import java.util.Objects
@@ -187,16 +186,11 @@ open class QSTileViewImpl @JvmOverloads constructor(
     private var lastDisabledByPolicy = false
 
     private val locInScreen = IntArray(2)
-    private var vertical = false
-    private val forceHideCheveron = true
-    private var labelHide = false
 
     init {
         setId(generateViewId())
-
-        vertical = TileUtils.getQSTileVerticalLayout(context, if (vertical) 1 else 0)
-        labelHide = TileUtils.getQSTileLabelHide(context)
-
+        orientation = LinearLayout.HORIZONTAL
+        gravity = Gravity.CENTER_VERTICAL or Gravity.START
         importantForAccessibility = IMPORTANT_FOR_ACCESSIBILITY_YES
         clipChildren = false
         clipToPadding = false
@@ -204,12 +198,15 @@ open class QSTileViewImpl @JvmOverloads constructor(
         background = createTileBackground()
         setColor(getBackgroundColorForState(QSTile.State.DEFAULT_STATE))
 
+        val padding = resources.getDimensionPixelSize(R.dimen.qs_tile_padding)
+        val startPadding = resources.getDimensionPixelSize(R.dimen.qs_tile_start_padding)
+        setPaddingRelative(startPadding, padding, padding, padding)
+
         val iconSize = resources.getDimensionPixelSize(R.dimen.qs_icon_size)
         addView(_icon, LayoutParams(iconSize, iconSize))
 
         createAndAddLabels()
         createAndAddSideView()
-        updateResources()
     }
 
     override fun onConfigurationChanged(newConfig: Configuration?) {
@@ -242,22 +239,11 @@ open class QSTileViewImpl @JvmOverloads constructor(
             width = iconSize
         }
 
-        if (vertical) {
-            orientation = LinearLayout.VERTICAL
-            gravity = Gravity.CENTER_HORIZONTAL or Gravity.CENTER_VERTICAL
-        } else {
-            orientation = LinearLayout.HORIZONTAL
-            gravity = Gravity.CENTER_VERTICAL or Gravity.START
-        }
-
-        if (labelHide)
-            gravity = Gravity.CENTER_HORIZONTAL or Gravity.CENTER_VERTICAL
-
         val padding = resources.getDimensionPixelSize(R.dimen.qs_tile_padding)
-        val startPadding = if (vertical) padding else resources.getDimensionPixelSize(R.dimen.qs_tile_start_padding)
+        val startPadding = resources.getDimensionPixelSize(R.dimen.qs_tile_start_padding)
         setPaddingRelative(startPadding, padding, padding, padding)
 
-        val labelMargin = if (vertical) 0 else resources.getDimensionPixelSize(R.dimen.qs_label_container_margin)
+        val labelMargin = resources.getDimensionPixelSize(R.dimen.qs_label_container_margin)
         (labelContainer.layoutParams as MarginLayoutParams).apply {
             marginStart = labelMargin
         }
@@ -279,7 +265,7 @@ open class QSTileViewImpl @JvmOverloads constructor(
 
     private fun createAndAddLabels() {
         labelContainer = LayoutInflater.from(context)
-                .inflate(if (vertical) R.layout.qs_tile_label_vertical else R.layout.qs_tile_label,this, false) as IgnorableChildLinearLayout
+                .inflate(R.layout.qs_tile_label, this, false) as IgnorableChildLinearLayout
         label = labelContainer.requireViewById(R.id.tile_label)
         secondaryLabel = labelContainer.requireViewById(R.id.app_label)
         if (collapsed) {
@@ -293,8 +279,7 @@ open class QSTileViewImpl @JvmOverloads constructor(
         }
         setLabelColor(getLabelColorForState(QSTile.State.DEFAULT_STATE))
         setSecondaryLabelColor(getSecondaryLabelColorForState(QSTile.State.DEFAULT_STATE))
-        if (!labelHide)
-            addView(labelContainer)
+        addView(labelContainer)
     }
 
     private fun createAndAddSideView() {
@@ -327,8 +312,7 @@ open class QSTileViewImpl @JvmOverloads constructor(
         // is too short.
         val constrainedSquishiness = constrainSquishiness(squishinessFraction)
         bottom = top + (actualHeight * constrainedSquishiness).toInt()
-        scrollY = (actualHeight - height) / if (vertical) 7 else 2
-        label.alpha = if (!vertical) 1.0f else Math.pow(squishinessFraction.toDouble(), 7.0).toFloat()
+        scrollY = (actualHeight - height) / 2
     }
 
     override fun updateAccessibilityOrder(previousView: View?): View {
@@ -641,7 +625,7 @@ open class QSTileViewImpl @JvmOverloads constructor(
             customDrawableView.setImageDrawable(state.sideViewCustomDrawable)
             customDrawableView.visibility = VISIBLE
             chevronView.visibility = GONE
-        } else if ((state !is BooleanState || state.forceExpandIcon) && !forceHideCheveron) {
+        } else if (state !is BooleanState || state.forceExpandIcon) {
             customDrawableView.setImageDrawable(null)
             customDrawableView.visibility = GONE
             chevronView.visibility = VISIBLE
