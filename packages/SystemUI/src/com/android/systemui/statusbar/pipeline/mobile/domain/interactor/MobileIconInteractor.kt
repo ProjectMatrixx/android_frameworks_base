@@ -121,6 +121,8 @@ interface MobileIconInteractor {
     val carrierNetworkChangeActive: StateFlow<Boolean>
 
     val shouldShowFourgIcon: StateFlow<Boolean>
+    
+    val shouldShowExclamationMark: StateFlow<Boolean>
 }
 
 /** Interactor for a single mobile connection. This connection _should_ have one subscription ID */
@@ -291,6 +293,30 @@ class MobileIconInteractorImpl(
                         }
                     }
                 Dependency.get(TunerService::class.java).addTunable(callback, SHOW_FOURG_ICON)
+
+                awaitClose { Dependency.get(TunerService::class.java).removeTunable(callback) }
+            }
+            .stateIn(
+                scope,
+                started = SharingStarted.WhileSubscribed(),
+                true
+            )
+
+    private final val DATA_DISABLED_ICON: String =
+            "system:" + Settings.System.DATA_DISABLED_ICON;
+
+    override val shouldShowExclamationMark: StateFlow<Boolean> =
+        conflatedCallbackFlow {
+                val callback =
+                    object : TunerService.Tunable {
+                        override fun onTuningChanged(key: String, newValue: String?) {
+                            when (key) {
+                                DATA_DISABLED_ICON -> 
+                                    trySend(TunerService.parseIntegerSwitch(newValue, true))
+                            }
+                        }
+                    }
+                Dependency.get(TunerService::class.java).addTunable(callback, DATA_DISABLED_ICON)
 
                 awaitClose { Dependency.get(TunerService::class.java).removeTunable(callback) }
             }
