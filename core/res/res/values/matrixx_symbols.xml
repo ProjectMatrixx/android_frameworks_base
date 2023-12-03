@@ -82,4 +82,13 @@
     <java-symbol type="string" name="config_batterymeterLandBoltPathMiUIPill" />
     <java-symbol type="string" name="config_batterymeterLandPowersavePathMiUIPill" />
     <java-symbol type="string" name="config_batterymeterLandErrorPerimeterPathMiUIPill" />
+
+    <!-- Device model (Build.MODEL) to spoof for netflix, if not empty -->
+    <java-symbol type="string" name="config_netflixSpoofModel" />
+
+    <!-- AttestationHooks -->
+    <java-symbol type="string" name="config_stockFingerprint" />
+
+    <!-- Whether Pixel props is enabled -->
+    <java-symbol type="bool" name="config_enablePixelProps" />
 </resources>
