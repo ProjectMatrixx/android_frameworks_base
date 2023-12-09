@@ -346,19 +346,19 @@ public class BatteryMeterView extends LinearLayout implements DarkReceiver {
             mFullCircleDrawable.setCharging(isCharging());
             mRLandscapeDrawable.setCharging(isCharging());
             mLandscapeDrawable.setCharging(isCharging());
-            mRLandscapeDrawableStyleA.setCharging(mCharging);
-            mLandscapeDrawableStyleA.setCharging(mCharging);
-            mRLandscapeDrawableStyleB.setCharging(mCharging);
-            mLandscapeDrawableStyleB.setCharging(mCharging);
-            mLandscapeDrawableBuddy.setCharging(mCharging);
-            mLandscapeDrawableLine.setCharging(mCharging);
-            mLandscapeDrawableMusku.setCharging(mCharging);
-            mLandscapeDrawablePill.setCharging(mCharging);
-            mLandscapeDrawableSignal.setCharging(mCharging);
-            mLandscapeDrawableiOS15.setCharging(mCharging);
-            mLandscapeDrawableiOS16.setCharging(mCharging);
-            mLandscapeDrawableOrigami.setCharging(mCharging);
-            mLandscapeDrawableMiUIPill.setCharging(mCharging);
+            mRLandscapeDrawableStyleA.setCharging(isCharging());
+            mLandscapeDrawableStyleA.setCharging(isCharging());
+            mRLandscapeDrawableStyleB.setCharging(isCharging());
+            mLandscapeDrawableStyleB.setCharging(isCharging());
+            mLandscapeDrawableBuddy.setCharging(isCharging());
+            mLandscapeDrawableLine.setCharging(isCharging());
+            mLandscapeDrawableMusku.setCharging(isCharging());
+            mLandscapeDrawablePill.setCharging(isCharging());
+            mLandscapeDrawableSignal.setCharging(isCharging());
+            mLandscapeDrawableiOS15.setCharging(isCharging());
+            mLandscapeDrawableiOS16.setCharging(isCharging());
+            mLandscapeDrawableOrigami.setCharging(isCharging());
+            mLandscapeDrawableMiUIPill.setCharging(isCharging());
             updateShowPercent();
             updatePercentText();
         }
@@ -470,7 +470,7 @@ public class BatteryMeterView extends LinearLayout implements DarkReceiver {
         } else {
             // Use the high voltage symbol ⚡ (u26A1 unicode) but prevent the system
             // to load its emoji colored variant with the uFE0E flag
-            String bolt = "\u26A1\uFE0E";
+            String bolt = "\u26A1";
             CharSequence mChargeIndicator = isCharging() && (mBatteryStyle == BATTERY_STYLE_HIDDEN ||
                     mBatteryStyle == BATTERY_STYLE_TEXT) ? (bolt + " ") : "";
             String percentText = mChargeIndicator + text;
