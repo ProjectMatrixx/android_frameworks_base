@@ -17,7 +17,6 @@ package com.android.systemui.qs;
 import android.animation.TimeInterpolator;
 import android.animation.ValueAnimator;
 import android.annotation.NonNull;
-import android.provider.Settings;
 import android.util.Log;
 import android.util.Pair;
 import android.util.SparseArray;
@@ -64,12 +63,9 @@ import kotlin.jvm.functions.Function1;
 @QSScope
 public class QSAnimator implements QSHost.Callback, PagedTileLayout.PageListener,
         TouchAnimator.Listener, OnLayoutChangeListener,
-        OnAttachStateChangeListener, TunerService.Tunable {
+        OnAttachStateChangeListener {
 
     private static final String TAG = "QSAnimator";
-
-    public static final String QS_TILE_UI_STYLE =
-            "system:" + Settings.System.QS_TILE_UI_STYLE;
 
     private static final float EXPANDED_TILE_DELAY = .86f;
     //Non first page delays
@@ -185,6 +181,7 @@ public class QSAnimator implements QSHost.Callback, PagedTileLayout.PageListener
             Log.w(TAG, "QS Not using page layout");
         }
         mQsPanelController.setPageListener(this);
+        isA11Style = mTunerService.getValue(QSPanel.QS_UI_STYLE, 0) == 1;
     }
 
     public void onRtlChanged() {
@@ -227,7 +224,6 @@ public class QSAnimator implements QSHost.Callback, PagedTileLayout.PageListener
 
     @Override
     public void onViewAttachedToWindow(@NonNull View view) {
-        mTunerService.addTunable(this, QS_TILE_UI_STYLE);
         updateAnimators();
         mQuickQSPanelController.mMediaHost.addVisibilityChangeListener(mMediaHostVisibilityListener);
     }
@@ -236,18 +232,6 @@ public class QSAnimator implements QSHost.Callback, PagedTileLayout.PageListener
     public void onViewDetachedFromWindow(@NonNull View v) {
         mHost.removeCallback(this);
         mQuickQSPanelController.mMediaHost.removeVisibilityChangeListener(mMediaHostVisibilityListener);
-    }
-
-    @Override
-    public void onTuningChanged(String key, String newValue) {
-        switch (key) {
-            case QS_TILE_UI_STYLE:
-                isA11Style =
-                     TunerService.parseInteger(newValue, 0) != 0;
-                break;
-            default:
-                break;
-         }
     }
 
     private void addNonFirstPageAnimators(int page) {

@@ -103,6 +103,13 @@ public class SystemSettings {
         Settings.System.SCREEN_FLASH_NOTIFICATION_COLOR,
         Settings.System.NAVIGATION_BAR_IME_SPACE,
         Settings.System.HAPTIC_ON_SLIDER,
-        Settings.System.MAX_VISIBLE_NOTIFICATION_ICONS
+        Settings.System.MAX_VISIBLE_NOTIFICATION_ICONS,
+        Settings.System.QS_PANEL_STYLE,
+        Settings.System.QS_TILE_LABEL_HIDE,
+        Settings.System.QS_TILE_VERTICAL_LAYOUT,
+        Settings.System.QS_LAYOUT,
+        Settings.System.QQS_LAYOUT,
+        Settings.System.QS_TILE_LABEL_SIZE,
+        Settings.System.QS_TILE_SECONDARY_LABEL_SIZE
     };
 }

@@ -47,7 +47,7 @@ class CustomizeTileView(
         }
 
     private fun isA11Style(): Boolean = Settings.System.getIntForUser(context.contentResolver, 
-    Settings.System.QS_TILE_UI_STYLE, 0,  UserHandle.USER_CURRENT) != 0
+    Settings.System.QS_UI_STYLE, 0,  UserHandle.USER_CURRENT) == 1
 
     override fun handleStateChanged(state: QSTile.State) {
         super.handleStateChanged(state)

@@ -6115,12 +6115,7 @@ public final class Settings {
         /**
          * @hide
          */
-        public static final String QS_LAYOUT_COLUMNS_LANDSCAPE = "qs_layout_columns_landscape";
-
-        /**
-         * @hide
-         */
-        public static final String QS_LAYOUT_COLUMNS = "qs_layout_columns";
+        public static final String QS_PANEL_STYLE = "qs_panel_style";
 
         /**
          * @hide
@@ -6140,22 +6135,22 @@ public final class Settings {
         /**
          * @hide
          */
-        public static final String QS_TILE_UI_STYLE = "qs_tile_ui_style";
+        public static final String QS_TILE_SECONDARY_LABEL_SIZE = "qs_tile_secondary_label_size";
 
         /**
          * @hide
          */
-        public static final String QS_PANEL_STYLE = "qs_panel_style";
+        public static final String QS_LAYOUT = "qs_layout";
 
         /**
          * @hide
          */
-        public static final String QQS_LAYOUT_ROWS_LANDSCAPE = "qqs_layout_rows_landscape";
+        public static final String QQS_LAYOUT = "qqs_layout";
 
         /**
          * @hide
          */
-        public static final String QQS_LAYOUT_ROWS = "qqs_layout_rows";
+        public static final String QS_UI_STYLE = "qs_ui_style";
 
         /**
          * Enable and Disable Dual Tone Colors QsPanel
@@ -13268,6 +13263,12 @@ public final class Settings {
          * @hide
          */
         public static final String SHOW_CLIPBOARD_OVERLAY = "show_clipboard_overlay";
+
+        /**
+         * Quicksettings tile shape
+         * @hide
+         */
+        public static final String QS_TILE_SHAPE = "qs_tile_shape";
 
         /**
          * Control whether FLAG_SECURE is ignored for all windows.

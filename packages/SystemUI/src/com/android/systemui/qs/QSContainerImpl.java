@@ -31,9 +31,9 @@ import android.widget.FrameLayout;
 import com.android.systemui.Dumpable;
 import com.android.systemui.R;
 import com.android.systemui.qs.customize.QSCustomizer;
-import com.android.systemui.qs.TileUtils;
 import com.android.systemui.shade.TouchLogger;
 import com.android.systemui.util.LargeScreenUtils;
+import com.android.internal.util.systemui.qs.QSLayoutUtils;
 
 import java.io.PrintWriter;
 
@@ -100,7 +100,7 @@ public class QSContainerImpl extends FrameLayout implements Dumpable {
         int availableHeight = View.MeasureSpec.getSize(heightMeasureSpec);
         int maxQs = availableHeight - layoutParams.topMargin - layoutParams.bottomMargin
                 - getPaddingBottom();
-        if (navBelow && TileUtils.getQsUiStyle(mContext) != 0) {
+        if (navBelow && QSLayoutUtils.getQsUiStyle(mContext) == 1) {
             maxQs -= getResources().getDimensionPixelSize(R.dimen.navigation_bar_height);
         }
         int padding = mPaddingLeft + mPaddingRight + layoutParams.leftMargin

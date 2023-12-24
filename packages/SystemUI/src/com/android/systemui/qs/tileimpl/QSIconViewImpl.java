@@ -43,6 +43,8 @@ import com.android.systemui.plugins.qs.QSTile;
 import com.android.systemui.plugins.qs.QSTile.State;
 import com.android.systemui.qs.AlphaControlledSignalTileView.AlphaControlledSlashImageView;
 
+import android.provider.Settings.System;
+
 import java.util.Objects;
 import java.util.Random;
 
@@ -251,28 +253,36 @@ public class QSIconViewImpl extends QSIconView {
      * Color to tint the tile icon based on state
      */
     private static int getIconColorForState(Context context, QSTile.State state) {
+        int qsPanelStyle = System.getIntForUser(context.getContentResolver(),
+                     System.QS_PANEL_STYLE, 0, UserHandle.USER_CURRENT);
+
+        Random mRandomColor = new Random();
+        int mRandomTint = Color.rgb((float) 
+        (mRandomColor.nextInt(256) / 2f + 0.5),
+         mRandomColor.nextInt(256),
+         mRandomColor.nextInt(256));
+        int mWhiteTint = Color.WHITE; 
+
         if (state.disabledByPolicy || state.state == Tile.STATE_UNAVAILABLE) {
             return Utils.getColorAttrDefaultColor(context, R.attr.outline);
         } else if (state.state == Tile.STATE_INACTIVE) {
             return Utils.getColorAttrDefaultColor(context, R.attr.onShadeInactiveVariant);
         } else if (state.state == Tile.STATE_ACTIVE) {
-            int qsPanelStyle = Settings.System.getIntForUser(context.getContentResolver(),
-                    Settings.System.QS_PANEL_STYLE, 0, UserHandle.USER_CURRENT);
-            if (qsPanelStyle == 1 || qsPanelStyle == 2 || qsPanelStyle == 10) {
-                return Utils.getColorAttrDefaultColor(context, R.attr.shadeActive);
-            } else if (qsPanelStyle == 3) {
-                Random randomColor = new Random();
-                return Color.rgb((float) 
-                    (randomColor.nextInt(256) / 2f + 0.5),
-                    randomColor.nextInt(256), randomColor.nextInt(256));
-            } else if (qsPanelStyle == 4 || qsPanelStyle == 6 || qsPanelStyle == 9) {
-                return Color.WHITE;
-            } else {
-                return Utils.getColorAttrDefaultColor(context, R.attr.onShadeActive);
-            }
+             if (qsPanelStyle == 1 || qsPanelStyle == 2 || qsPanelStyle == 10) {
+               return Utils.getColorAttrDefaultColor(context,
+                        android.R.attr.colorAccent);
+             } else if (qsPanelStyle == 3) {
+               return mRandomTint;
+             } else if (qsPanelStyle == 4 || qsPanelStyle == 6 || qsPanelStyle == 9) {
+               return mWhiteTint;
+             } else {
+              return Utils.getColorAttrDefaultColor(context,
+                    com.android.internal.R.attr.textColorPrimaryInverse);
+             }
         } else {
             Log.e("QSIconView", "Invalid state " + state);
             return 0;
+
         }
     }
 

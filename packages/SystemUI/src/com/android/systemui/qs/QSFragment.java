@@ -47,6 +47,7 @@ import androidx.lifecycle.LifecycleRegistry;
 
 import com.android.app.animation.Interpolators;
 import com.android.keyguard.BouncerPanelExpansionCalculator;
+import com.android.systemui.Dependency;
 import com.android.systemui.Dumpable;
 import com.android.systemui.R;
 import com.android.systemui.animation.ShadeInterpolation;
@@ -94,6 +95,9 @@ public class QSFragment extends LifecycleFragment implements QS, CommandQueue.Ca
     private static final String QS_FOOTER_TRANSPARENCY =
             "system:" + Settings.System.QS_FOOTER_TRANSPARENCY;
 
+    private static final String QS_UI_STYLE =
+            "system:" + Settings.System.QS_UI_STYLE;
+
     private final Rect mQsBounds = new Rect();
     private final SysuiStatusBarStateController mStatusBarStateController;
     private final KeyguardBypassController mBypassController;
@@ -115,6 +119,8 @@ public class QSFragment extends LifecycleFragment implements QS, CommandQueue.Ca
     private float mSquishinessFraction = 1;
     private boolean mQsDisabled;
     private int[] mLocationTemp = new int[2];
+    private int mQSPanelScrollY = 0;
+    private boolean isA11Style;
 
     private final RemoteInputQuickSettingsDisabler mRemoteInputQuickSettingsDisabler;
     private final MediaHost mQsMediaHost;
@@ -249,6 +255,9 @@ public class QSFragment extends LifecycleFragment implements QS, CommandQueue.Ca
         mQSPanelScrollView.setOnScrollChangeListener(
                 (v, scrollX, scrollY, oldScrollX, oldScrollY) -> {
                     // Lazily update animators whenever the scrolling changes
+                    if (isA11Style) {
+                        mQSPanelScrollY = scrollY;
+                    }
                     mQSAnimator.requestAnimatorUpdate();
                     if (mScrollListener != null) {
                         mScrollListener.onQsPanelScrollChanged(scrollY);
@@ -298,6 +307,7 @@ public class QSFragment extends LifecycleFragment implements QS, CommandQueue.Ca
                 });
 
         mTunerService.addTunable(this, QS_FOOTER_TRANSPARENCY);
+        Dependency.get(TunerService.class).addTunable(this, QS_UI_STYLE);
     }
 
     private void bindFooterActionsView(View root) {
@@ -439,6 +449,9 @@ public class QSFragment extends LifecycleFragment implements QS, CommandQueue.Ca
                 mCustomAlpha =
                         TunerService.parseInteger(newValue, 100) / 100f;
                 break;
+            case QS_UI_STYLE:
+                isA11Style = TunerService.parseInteger(newValue, 0) == 1;
+                break;
             default:
                 break;
          }
@@ -479,31 +492,45 @@ public class QSFragment extends LifecycleFragment implements QS, CommandQueue.Ca
         final boolean disabled = (state2 & DISABLE2_QUICK_SETTINGS) != 0;
         if (disabled == mQsDisabled) return;
         mQsDisabled = disabled;
-        mContainer.disable(state1, state2, animate);
-        mHeader.disable(state1, state2, animate);
-        mFooter.disable(state1, state2, animate);
+        if (mContainer != null) {
+            mContainer.disable(state1, state2, animate);
+        }
+        if (mHeader != null) {
+            mHeader.disable(state1, state2, animate);
+        }
+        if (mFooter != null) {
+            mFooter.disable(state1, state2, animate);
+        }
         updateQsState();
     }
 
     private void updateQsState() {
         final boolean expandVisually = mQsExpanded || mStackScrollerOverscrolling
                 || mHeaderAnimating;
+        if (mQSPanelController != null) {
         mQSPanelController.setExpanded(mQsExpanded);
+        }
         boolean keyguardShowing = isKeyguardState();
+        if (mHeader != null) {
         mHeader.setVisibility((mQsExpanded || !keyguardShowing || mHeaderAnimating
                 || mShowCollapsedOnKeyguard)
                 ? View.VISIBLE
                 : View.INVISIBLE);
         mHeader.setExpanded((keyguardShowing && !mHeaderAnimating && !mShowCollapsedOnKeyguard)
                 || (mQsExpanded && !mStackScrollerOverscrolling), mQuickQSPanelController);
+        }
         boolean qsPanelVisible = !mQsDisabled && expandVisually;
         boolean footerVisible = qsPanelVisible && (mQsExpanded || !keyguardShowing
                 || mHeaderAnimating || mShowCollapsedOnKeyguard);
+        if (mFooter != null) {
         mFooter.setVisibility(footerVisible ? View.VISIBLE : View.INVISIBLE);
         mQSFooterActionsViewModel.onVisibilityChangeRequested(footerVisible);
         mFooter.setExpanded((keyguardShowing && !mHeaderAnimating && !mShowCollapsedOnKeyguard)
                 || (mQsExpanded && !mStackScrollerOverscrolling));
+        }
+        if (mQSPanelController != null) {
         mQSPanelController.setVisibility(qsPanelVisible ? View.VISIBLE : View.INVISIBLE);
+        }
         if (DEBUG) {
             Log.d(TAG, "Footer: " + footerVisible + ", QS Panel: " + qsPanelVisible);
         }
@@ -691,7 +718,9 @@ public class QSFragment extends LifecycleFragment implements QS, CommandQueue.Ca
 
         if (expansion < 1 && expansion > 0.99) {
             if (mQuickQSPanelController.switchTileLayout(false)) {
+                if (mHeader != null) {
                 mHeader.updateResources();
+                }
             }
         }
         mQSPanelController.setIsOnKeyguard(onKeyguard);
