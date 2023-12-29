@@ -61,9 +61,12 @@ public class PixelPropsUtils {
 
     private static final Boolean sEnablePixelProps =
             Resources.getSystem().getBoolean(R.bool.config_enablePixelProps);
+    private static final Boolean sIsTablet =
+            Resources.getSystem().getBoolean(R.bool.config_spoofasTablet);
 
     private static final Map<String, Object> propsToChangeGeneric;
     private static final Map<String, Object> propsToChangeRecentPixel;
+    private static final Map<String, Object> propsToChangePixelTablet;
     private static final Map<String, Object> propsToChangePixel5;
     private static final Map<String, Object> propsToChangeMeizu;
     private static final Map<String, ArrayList<String>> propsToKeep;
@@ -149,6 +152,15 @@ public class PixelPropsUtils {
         propsToChangeRecentPixel.put("MODEL", "Pixel 8 Pro");
         propsToChangeRecentPixel.put("ID", "UQ1A.240105.004");
         propsToChangeRecentPixel.put("FINGERPRINT", "google/husky/husky:14/UQ1A.240105.004/11206848:user/release-keys");
+        propsToChangePixelTablet = new HashMap<>();
+        propsToChangePixelTablet.put("BRAND", "google");
+        propsToChangePixelTablet.put("MANUFACTURER", "Google");
+        propsToChangePixelTablet.put("DEVICE", "tangorpro");
+        propsToChangePixelTablet.put("PRODUCT", "tangorpro");
+        propsToChangeRecentPixel.put("HARDWARE", "tangorpro");
+        propsToChangePixelTablet.put("MODEL", "Pixel Tablet");
+        propsToChangePixelTablet.put("ID", "UQ1A.240105.004");
+        propsToChangePixelTablet.put("FINGERPRINT", "google/tangorpro/tangorpro:14/UQ1A.240105.004/11206848:user/release-keys");
         propsToChangePixel5 = new HashMap<>();
         propsToChangePixel5.put("BRAND", "google");
         propsToChangePixel5.put("MANUFACTURER", "Google");
@@ -300,6 +312,8 @@ public class PixelPropsUtils {
                 return;
             } else if (Arrays.asList(packagesToChangeRecentPixel).contains(packageName)) {
                 propsToChange.putAll(propsToChangeRecentPixel);
+            } else if (sIsTablet) {
+                propsToChange.putAll(propsToChangePixelTablet);
             } else {
                 propsToChange.putAll(propsToChangePixel5);
             }
