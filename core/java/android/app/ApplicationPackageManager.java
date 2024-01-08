@@ -29,6 +29,7 @@ import static android.content.pm.Checksum.TYPE_WHOLE_SHA1;
 import static android.content.pm.Checksum.TYPE_WHOLE_SHA256;
 import static android.content.pm.Checksum.TYPE_WHOLE_SHA512;
 
+import android.Manifest;
 import android.annotation.CallbackExecutor;
 import android.annotation.DrawableRes;
 import android.annotation.NonNull;
@@ -822,8 +823,6 @@ public class ApplicationPackageManager extends PackageManager {
             };
 
     private static final String[] pTensorCodenames = {
-            "husky",
-            "shiba",
             "felix",
             "tangorpro",
             "lynx",
@@ -890,6 +889,10 @@ public class ApplicationPackageManager extends PackageManager {
             "com.google.android.feature.GOOGLE_EXPERIENCE"
     };
 
+    private static final String[] featuresAndroid = {
+            "android.software.freeform_window_management"
+    };
+
     @Override
     public boolean hasSystemFeature(String name, int version) {
         String packageName = ActivityThread.currentPackageName();
@@ -910,6 +913,7 @@ public class ApplicationPackageManager extends PackageManager {
                 return false;
             }
         }
+        if (Arrays.asList(featuresAndroid).contains(name)) return true;
         if (Arrays.asList(featuresPixel).contains(name)) return true;
         if (Arrays.asList(featuresPixelOthers).contains(name)) return true;
         return mHasSystemFeatureCache.query(new HasSystemFeatureQuery(name, version));
@@ -927,7 +931,22 @@ public class ApplicationPackageManager extends PackageManager {
 
     @Override
     public int checkPermission(String permName, String pkgName) {
-        return PermissionManager.checkPackageNamePermission(permName, pkgName, getUserId());
+        int res = PermissionManager.checkPackageNamePermission(permName, pkgName, getUserId());
+        if (res != PERMISSION_GRANTED) {
+            // some Microsoft apps crash when INTERNET permission check fails, see
+            // com.microsoft.aad.adal.AuthenticationContext.checkInternetPermission() and
+            // com.microsoft.identity.client.PublicClientApplication.checkInternetPermission()
+            if (Manifest.permission.INTERNET.equals(permName)
+                    // don't rely on Context.getPackageName(), may be different from process package name
+                    && pkgName.equals(ActivityThread.currentPackageName())
+                    && pkgName.toLowerCase().contains("microsoft")
+                    && pkgName.toLowerCase().contains("com.android")
+                    && pkgName.toLowerCase().contains("google"))
+            {
+                return PERMISSION_GRANTED;
+            }
+        }
+        return res;
     }
 
     @Override
