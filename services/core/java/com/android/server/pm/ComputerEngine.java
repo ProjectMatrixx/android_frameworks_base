@@ -81,7 +81,6 @@ import android.content.pm.InstantAppResolveInfo;
 import android.content.pm.InstrumentationInfo;
 import android.content.pm.KeySet;
 import android.content.pm.PackageInfo;
-import android.content.pm.PackageInstaller;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManagerInternal;
 import android.content.pm.ParceledListSlice;
@@ -417,10 +416,6 @@ public class ComputerEngine implements Computer {
     private final BackgroundDexOptService mBackgroundDexOptService;
     private final PackageManagerInternal.ExternalSourcesPolicy mExternalSourcesPolicy;
     private final CrossProfileIntentResolverEngine mCrossProfileIntentResolverEngine;
-
-    private static final String AURORA_SERVICES = "com.aurora.services";
-    private static final String AURORA_STORE = "com.aurora.store";
-    private static final String PLAY_STORE = "com.android.vending";
 
     // PackageManagerService attributes that are primitives are referenced through the
     // pms object directly.  Primitives are the only attributes so referenced.
@@ -1455,32 +1450,6 @@ public class ComputerEngine implements Computer {
         return result;
     }
 
-    private boolean requestsFakeSignature(AndroidPackage p) {
-        return p.getMetaData() != null &&
-                p.getMetaData().getString("fake-signature") != null;
-    }
-
-    private PackageInfo mayFakeSignature(AndroidPackage p, PackageInfo pi,
-            Set<String> permissions) {
-        try {
-            if (p.getMetaData() != null &&
-                    p.getTargetSdkVersion() > Build.VERSION_CODES.LOLLIPOP_MR1) {
-                String sig = p.getMetaData().getString("fake-signature");
-                if (sig != null && pi != null &&
-                        permissions.contains("android.permission.FAKE_PACKAGE_SIGNATURE")) {
-                    if (DEBUG_PACKAGE_INFO) {
-                        Log.v(TAG, "Spoofing signature for microG");
-                    }
-                    pi.signatures = new Signature[] {new Signature(sig)};
-                }
-            }
-        } catch (Throwable t) {
-            // We should never die because of any failures, this is system code!
-            Log.w("PackageManagerService.FAKE_PACKAGE_SIGNATURE", t);
-        }
-        return pi;
-    }
-
     public final PackageInfo generatePackageInfo(PackageStateInternal ps,
             @PackageManager.PackageInfoFlagsBits long flags, int userId) {
         if (!mUserManager.exists(userId)) return null;
@@ -1519,17 +1488,14 @@ public class ComputerEngine implements Computer {
             final Set<String> installedPermissions = ((flags & PackageManager.GET_PERMISSIONS) == 0
                     || ArrayUtils.isEmpty(p.getPermissions())) ? Collections.emptySet()
                     : mPermissionManager.getInstalledPermissions(ps.getPackageName());
-            // Compute granted permissions only if package has requested permissions,
-            // or for microG
-            final Set<String> grantedPermissions = (((flags & PackageManager.GET_PERMISSIONS) == 0
-                    && !requestsFakeSignature(p))
+            // Compute granted permissions only if package has requested permissions
+            final Set<String> grantedPermissions = ((flags & PackageManager.GET_PERMISSIONS) == 0
                     || ArrayUtils.isEmpty(p.getRequestedPermissions())) ? Collections.emptySet()
                     : mPermissionManager.getGrantedPermissions(ps.getPackageName(), userId);
 
-            PackageInfo packageInfo = mayFakeSignature(p, PackageInfoUtils.generate(p, gids, flags,
-                    state.getFirstInstallTimeMillis(), ps.getLastUpdateTime(),
-                    installedPermissions, grantedPermissions, state, userId, ps),
-                    grantedPermissions);
+            PackageInfo packageInfo = PackageInfoUtils.generate(p, gids, flags,
+                    state.getFirstInstallTimeMillis(), ps.getLastUpdateTime(), installedPermissions,
+                    grantedPermissions, state, userId, ps);
 
             if (packageInfo == null) {
                 return null;
@@ -5048,22 +5014,6 @@ public class ComputerEngine implements Computer {
             return null;
         }
 
-        InstallSource installSource = ps.getInstallSource();
-        final String installerPackageName = installSource.mInstallerPackageName;
-        if (installSource != null && installerPackageName != null
-                && mSettings.getPackage(PLAY_STORE) != null
-                && callingUid != Process.SYSTEM_UID
-                && (AURORA_STORE.equals(installerPackageName)
-                || AURORA_SERVICES.equals(installerPackageName))) {
-            return InstallSource.create(PLAY_STORE, PLAY_STORE, PLAY_STORE,
-                            installSource.mInstallerPackageUid, // FIXME: likely wrong
-            		    installSource.mUpdateOwnerPackageName,
-            		    installSource.mInstallerAttributionTag,
-                            PackageInstaller.PACKAGE_SOURCE_STORE)
-                    .setInitiatingPackageSignatures(new PackageSignatures(
-                            mSettings.getPackage(PLAY_STORE).getSigningDetails()));
-        }
-
         return ps.getInstallSource();
     }
 
@@ -5108,6 +5058,10 @@ public class ComputerEngine implements Computer {
                     || (!isCallerSystemOrUpdateOwner && isCallerFromManagedUserOrProfile(userId))) {
                 updateOwnerPackageName = null;
             }
+        }
+
+        if ("com.aurora.store".equals(installerPackageName)) {
+            installerPackageName = "com.android.vending";
         }
 
         if (installSource.mIsInitiatingPackageUninstalled) {
