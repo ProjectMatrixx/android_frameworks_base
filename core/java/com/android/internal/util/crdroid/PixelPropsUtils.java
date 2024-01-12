@@ -125,6 +125,7 @@ public class PixelPropsUtils {
             "com.google.android.backuptransport",
             "com.google.android.dialer",
             "com.google.android.euicc",
+            "com.google.android.googlequicksearchbox",
             "com.google.android.setupwizard",
             "com.google.android.youtube",
             "com.google.ar.core",
