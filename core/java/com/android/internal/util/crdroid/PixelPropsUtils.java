@@ -57,6 +57,7 @@ public class PixelPropsUtils {
     private static final String SPOOF_MUSIC_APPS = "persist.sys.disguise_props_for_music_app";
 
     private static final String TAG = PixelPropsUtils.class.getSimpleName();
+    private static final String PACKAGE_AIAI = "com.google.android.apps.miphone.aiai.AiaiApplication";
     private static final boolean DEBUG = false;
 
     private static final Boolean sEnablePixelProps =
@@ -291,7 +292,7 @@ public class PixelPropsUtils {
         final String processName = Application.getProcessName();
 
         propsToChangeGeneric.forEach((k, v) -> setPropValue(k, v));
-        if (packageName == null || processName == null || packageName.isEmpty()) {
+        if (packageName == null || processName == null || packageName.isEmpty() || packageName.equals(PACKAGE_AIAI)) {
             return;
         }
         if (Arrays.asList(packagesToKeep).contains(packageName)) {
