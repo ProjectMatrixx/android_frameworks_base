@@ -41,7 +41,7 @@
         
         <TextView 
            android:textSize="13.5sp"
-           android:textColor="?android:attr/textColorPrimaryInverse"
+           android:textColor="@drawable/text_color_qs_percent"
            android:id="@+id/percentbrightness"
            android:gravity="center_vertical"
            android:layout_width="wrap_content"
