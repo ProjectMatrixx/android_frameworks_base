@@ -30,7 +30,7 @@
         android:paddingTop="1dp"
         android:gravity="center_horizontal"
         android:textDirection="locale"
-        android:ellipsize="marquee"
+        android:ellipsize="end"
         android:marqueeRepeatLimit="1"
         android:maxLines="1"
         android:textAppearance="@style/TextAppearance.QS.TileLabel"/>
@@ -42,7 +42,7 @@
         android:paddingTop="1dp"
         android:gravity="center_horizontal"
         android:textDirection="locale"
-        android:ellipsize="marquee"
+        android:ellipsize="end"
         android:marqueeRepeatLimit="1"
         android:maxLines="1"
         android:visibility="gone"
