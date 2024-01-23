@@ -109,6 +109,7 @@ import com.android.systemui.keyguard.ScreenLifecycle;
 import com.android.systemui.keyguard.domain.interactor.KeyguardInteractor;
 import com.android.systemui.keyguard.util.IndicationHelper;
 import com.android.systemui.log.core.LogLevel;
+import com.android.systemui.crdroid.BatteryBarView;
 import com.android.systemui.plugins.FalsingManager;
 import com.android.systemui.plugins.statusbar.StatusBarStateController;
 import com.android.systemui.res.R;
@@ -236,6 +237,9 @@ public class KeyguardIndicationController {
     private boolean mAlternateFastchargeInfoUpdate;
 
     private KeyguardUpdateMonitorCallback mUpdateMonitorCallback;
+
+    // omni additions
+    private BatteryBarView mBatteryBar;
 
     private boolean mDozing;
     private boolean mIsActiveDreamLockscreenHosted;
@@ -442,6 +446,7 @@ public class KeyguardIndicationController {
                 mKeyguardLogger,
                 mFeatureFlags
         );
+        mBatteryBar = indicationArea.findViewById(R.id.battery_bar_view);
         updateDeviceEntryIndication(false /* animate */);
         updateOrganizedOwnedDevice();
         if (mBroadcastReceiver == null) {
@@ -1079,6 +1084,19 @@ public class KeyguardIndicationController {
             return;
         }
 
+        if (mVisible) {
+            boolean showBatteryBar = Settings.System.getIntForUser(mContext.getContentResolver(),
+                     Settings.System.CUSTOM_KEYGUARD_SHOW_BATTERY_BAR, 0, UserHandle.USER_CURRENT) == 1;
+            boolean showBatteryBarAlways = Settings.System.getIntForUser(mContext.getContentResolver(),
+                     Settings.System.CUSTOM_KEYGUARD_SHOW_BATTERY_BAR_ALWAYS, 0, UserHandle.USER_CURRENT) == 1;
+            // A few places might need to hide the indication, so always start by making it visible
+            mIndicationArea.setVisibility(VISIBLE);
+
+            // Walk down a precedence-ordered list of what indication
+            // should be shown based on user or device state
+            // AoD
+            mBatteryBar.setVisibility(View.GONE);
+
         // Device is dreaming and the dream is hosted in lockscreen
         if (mIsActiveDreamLockscreenHosted) {
             mIndicationArea.setVisibility(GONE);
@@ -1094,7 +1112,9 @@ public class KeyguardIndicationController {
             boolean useMisalignmentColor = false;
             mLockScreenIndicationView.setVisibility(View.GONE);
             mTopIndicationView.setVisibility(VISIBLE);
-            CharSequence newIndication;
+            mTopIndicationView.setTextColor(Color.WHITE);
+
+            CharSequence newIndication = null;
             boolean setWakelock = false;
 
             if (!TextUtils.isEmpty(mBiometricMessage)) {
@@ -1111,15 +1131,26 @@ public class KeyguardIndicationController {
             } else if (!TextUtils.isEmpty(mAlignmentIndication)) {
                 useMisalignmentColor = true;
                 newIndication = mAlignmentIndication;
+                mTopIndicationView.setTextColor(mContext.getColor(R.color.misalignment_text_color));
                 setWakelock = false;
-            } else if (mPowerPluggedIn || mEnableBatteryDefender) {
-                newIndication = computePowerIndication();
-                setWakelock = animate;
-            } else {
-                newIndication = NumberFormat.getPercentInstance()
-                        .format(mBatteryLevel / 100f);
-                setWakelock = false;
-            }
+                } else if (mPowerPluggedIn || mEnableBatteryDefender) {
+                    newIndication = computePowerIndication();
+                    if (showBatteryBar || showBatteryBarAlways) {
+                        mBatteryBar.setVisibility(View.VISIBLE);
+                        mBatteryBar.setBatteryPercent(mBatteryLevel);
+                        mBatteryBar.setBarColor(Color.WHITE);
+                    }
+                    setWakelock = animate;
+                } else {
+                    newIndication = NumberFormat.getPercentInstance()
+                            .format(mBatteryLevel / 100f);
+                    if (showBatteryBarAlways) {
+                        mBatteryBar.setVisibility(View.VISIBLE);
+                        mBatteryBar.setBatteryPercent(mBatteryLevel);
+                        mBatteryBar.setBarColor(Color.WHITE);
+                    }
+                    setWakelock = false;
+                }
 
             if (!TextUtils.equals(mTopIndicationView.getText(), newIndication)) {
                 if (setWakelock) {
@@ -1152,6 +1183,7 @@ public class KeyguardIndicationController {
         mTopIndicationView.setText(null);
         mLockScreenIndicationView.setVisibility(View.VISIBLE);
         updateLockScreenIndications(animate, getCurrentUser());
+      }
     }
 
     /**
