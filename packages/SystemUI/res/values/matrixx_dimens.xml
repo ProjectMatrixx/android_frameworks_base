@@ -8,4 +8,7 @@
 
     <!-- Base Multiplier for dp to px. -->
     <dimen name="amb_font_base_multiplier_dp">1dp</dimen>
+    
+    <!-- AoD battery bar -->
+    <dimen name="battery_bar_view_height">6dp</dimen>
 </resources>
