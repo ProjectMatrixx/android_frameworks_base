@@ -6657,6 +6657,16 @@ public final class Settings {
         public static final String AMBIENT_CUSTOM_IMAGE = "ambient_custom_image";
 
         /**
+         * @hide
+         */
+        public static final String CUSTOM_KEYGUARD_SHOW_BATTERY_BAR = "sysui_keyguard_show_battery_bar";
+
+        /**
+         * @hide
+         */
+        public static final String CUSTOM_KEYGUARD_SHOW_BATTERY_BAR_ALWAYS = "sysui_keyguard_show_battery_bar_always";
+
+        /**
          * Gesture navbar IME space.
          * Supported modes: 0 for normal length, 1 for narrow and 2 for hidden.
          * Default 0.
@@ -6822,6 +6832,8 @@ public final class Settings {
             PRIVATE_SETTINGS.add(NAVIGATION_BAR_IME_SPACE);
             PRIVATE_SETTINGS.add(AMBIENT_TEXT_COLOR);
             PRIVATE_SETTINGS.add(AMBIENT_TEXT_TYPE_COLOR);
+            PRIVATE_SETTINGS.add(CUSTOM_KEYGUARD_SHOW_BATTERY_BAR);
+            PRIVATE_SETTINGS.add(CUSTOM_KEYGUARD_SHOW_BATTERY_BAR_ALWAYS);
         }
 
         /**
