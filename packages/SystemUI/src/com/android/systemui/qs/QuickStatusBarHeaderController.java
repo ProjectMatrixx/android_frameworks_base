@@ -21,6 +21,15 @@ import com.android.systemui.util.ViewController;
 
 import javax.inject.Inject;
 
+import com.android.systemui.qs.QuickStatusBarHeader;
+import com.android.systemui.qs.QuickQSPanelController;
+import com.android.systemui.qs.QSPanelController;
+import com.android.systemui.statusbar.connectivity.AccessPointController;
+import com.android.systemui.statusbar.policy.BluetoothController;
+import com.android.systemui.qs.tiles.dialog.BluetoothDialogFactory;
+import com.android.systemui.qs.tiles.dialog.InternetDialogFactory;
+import com.android.systemui.media.dialog.MediaOutputDialogFactory;
+
 /**
  * Controller for {@link QuickStatusBarHeader}.
  */
@@ -31,11 +40,24 @@ class QuickStatusBarHeaderController extends ViewController<QuickStatusBarHeader
     private boolean mListening;
 
     @Inject
-    QuickStatusBarHeaderController(QuickStatusBarHeader view,
-            QuickQSPanelController quickQSPanelController
+    QuickStatusBarHeaderController(
+        QuickStatusBarHeader quickStatusBarHeader,
+        QuickQSPanelController quickQSPanelController,
+        QSPanelController qsPanelController,
+        AccessPointController accessPointController,
+        BluetoothController bluetoothController,
+        BluetoothDialogFactory bluetoothDialogFactory,
+        InternetDialogFactory internetDialogFactory,
+        MediaOutputDialogFactory mediaOutputDialogFactory
     ) {
-        super(view);
+        super(quickStatusBarHeader);
         mQuickQSPanelController = quickQSPanelController;
+        quickStatusBarHeader.mQSPanelController = qsPanelController;
+        quickStatusBarHeader.mAccessPointController = accessPointController;
+        quickStatusBarHeader.mInternetDialogFactory = internetDialogFactory;
+        quickStatusBarHeader.mBluetoothController = bluetoothController;
+        quickStatusBarHeader.mBluetoothDialogFactory = bluetoothDialogFactory;
+        quickStatusBarHeader.mMediaOutputDialogFactory = mediaOutputDialogFactory;
     }
 
     @Override

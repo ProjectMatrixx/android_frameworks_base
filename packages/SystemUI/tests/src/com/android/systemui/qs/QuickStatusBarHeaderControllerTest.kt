@@ -30,14 +30,41 @@ import org.mockito.Mockito.`when`
 import org.mockito.Mockito.verify
 import org.mockito.MockitoAnnotations
 
+import com.android.systemui.qs.QuickStatusBarHeader
+import com.android.systemui.qs.QuickQSPanelController
+import com.android.systemui.qs.QSPanelController
+import com.android.systemui.statusbar.connectivity.AccessPointController
+import com.android.systemui.statusbar.policy.BluetoothController
+import com.android.systemui.qs.tiles.dialog.BluetoothDialogFactory
+import com.android.systemui.qs.tiles.dialog.InternetDialogFactory
+import com.android.systemui.statusbar.NotificationMediaManager
+import android.media.session.MediaSessionManager
+import com.android.systemui.media.dialog.MediaOutputDialogFactory
+
 @SmallTest
 @RunWith(AndroidTestingRunner::class)
 class QuickStatusBarHeaderControllerTest : SysuiTestCase() {
 
     @Mock
-    private lateinit var view: QuickStatusBarHeader
+    private lateinit var quickStatusBarHeader: QuickStatusBarHeader
     @Mock
     private lateinit var quickQSPanelController: QuickQSPanelController
+    @Mock
+    private lateinit var qsPanelController: QSPanelController
+    @Mock
+    private lateinit var accessPointController: AccessPointController
+    @Mock
+    private lateinit var bluetoothController: BluetoothController
+    @Mock
+    private lateinit var bluetoothDialogFactory: BluetoothDialogFactory
+    @Mock
+    private lateinit var internetDialogFactory: InternetDialogFactory
+    @Mock
+    private lateinit var notificationMediaManager: NotificationMediaManager
+    @Mock
+    private lateinit var mediaSessionManager: MediaSessionManager
+    @Mock
+    private lateinit var mediaOutputDialogFactory: MediaOutputDialogFactory
 
     @Mock(answer = Answers.RETURNS_DEEP_STUBS)
     private lateinit var context: Context
@@ -47,11 +74,22 @@ class QuickStatusBarHeaderControllerTest : SysuiTestCase() {
     @Before
     fun setUp() {
         MockitoAnnotations.initMocks(this)
-        `when`(view.resources).thenReturn(mContext.resources)
-        `when`(view.isAttachedToWindow).thenReturn(true)
-        `when`(view.context).thenReturn(context)
+        `when`(quickStatusBarHeader.resources).thenReturn(mContext.resources)
+        `when`(quickStatusBarHeader.isAttachedToWindow).thenReturn(true)
+        `when`(quickStatusBarHeader.context).thenReturn(context)
 
-        controller = QuickStatusBarHeaderController(view, quickQSPanelController)
+        controller = QuickStatusBarHeaderController(
+            quickStatusBarHeader,
+            quickQSPanelController,
+            qsPanelController,
+            accessPointController,
+            bluetoothController,
+            bluetoothDialogFactory,
+            internetDialogFactory,
+            notificationMediaManager,
+            mediaSessionManager,
+            mediaOutputDialogFactory
+        )
     }
 
     @After

@@ -456,7 +456,7 @@ public class QSPanel extends LinearLayout implements Tunable {
 
     protected void updatePadding() {
         final Resources res = mContext.getResources();
-        int paddingTop = res.getDimensionPixelSize(R.dimen.qs_panel_padding_top);
+        int paddingTop = res.getDimensionPixelSize(R.dimen.custom_qs_panel_padding_top);
         int paddingBottom = res.getDimensionPixelSize(R.dimen.qs_panel_padding_bottom);
         setPaddingRelative(getPaddingStart(),
                 paddingTop,
@@ -542,36 +542,9 @@ public class QSPanel extends LinearLayout implements Tunable {
         switchToParent(child, parent, index, getDumpableTag());
     }
 
-    /** Call when orientation has changed and MediaHost needs to be adjusted. */
+    /** Hide Notification media player. */
     private void reAttachMediaHost(ViewGroup hostView, boolean horizontal) {
-        if (!mUsingMediaPlayer) {
-            return;
         }
-        mMediaHostView = hostView;
-        ViewGroup newParent = horizontal ? mHorizontalLinearLayout : this;
-        ViewGroup currentParent = (ViewGroup) hostView.getParent();
-        Log.d(getDumpableTag(), "Reattaching media host: " + horizontal
-                + ", current " + currentParent + ", new " + newParent);
-        if (currentParent != newParent) {
-            if (currentParent != null) {
-                currentParent.removeView(hostView);
-            }
-            newParent.addView(hostView);
-            LinearLayout.LayoutParams layoutParams = (LayoutParams) hostView.getLayoutParams();
-            layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT;
-            layoutParams.width = horizontal ? 0 : ViewGroup.LayoutParams.MATCH_PARENT;
-            layoutParams.weight = horizontal ? 1f : 0;
-            // Add any bottom margin, such that the total spacing is correct. This is only
-            // necessary if the view isn't horizontal, since otherwise the padding is
-            // carried in the parent of this view (to ensure correct vertical alignment)
-            layoutParams.bottomMargin = !horizontal || displayMediaMarginsOnMedia()
-                    ? Math.max(mMediaTotalBottomMargin - getPaddingBottom(), 0) : 0;
-            layoutParams.topMargin = mediaNeedsTopMargin() && !horizontal
-                    ? mMediaTopMargin : 0;
-            // Call setLayoutParams explicitly to ensure that requestLayout happens
-            hostView.setLayoutParams(layoutParams);
-        }
-    }
 
     public void setExpanded(boolean expanded) {
         if (mExpanded == expanded) return;
