@@ -112,8 +112,8 @@ public class BackAnimationController implements RemoteCallable<BackAnimationCont
     /** Tracks if we should start the back gesture on the next motion move event */
     private boolean mShouldStartOnNextMoveEvent = false;
     private boolean mOnBackStartDispatched = false;
-    /** @see #setTriggerLongSwipe(boolean) */
-    private boolean mTriggerLongSwipe;
+    /** @see #setTriggerBack(boolean) */
+    private boolean mTriggerBack;
 
     private final FlingAnimationUtils mFlingAnimationUtils;
 
@@ -314,12 +314,6 @@ public class BackAnimationController implements RemoteCallable<BackAnimationCont
         @Override
         public void setTriggerBack(boolean triggerBack) {
             mShellExecutor.execute(() -> BackAnimationController.this.setTriggerBack(triggerBack));
-        }
-
-        @Override
-        public void setTriggerLongSwipe(boolean triggerLongSwipe) {
-            mShellExecutor.execute(
-                    () -> BackAnimationController.this.setTriggerLongSwipe(triggerLongSwipe));
         }
 
         @Override
@@ -681,17 +675,6 @@ public class BackAnimationController implements RemoteCallable<BackAnimationCont
         }
     }
 
-    /**
-     * Sets to true when the back long swipe gesture has passed the triggering threshold,
-     * false otherwise.
-     */
-    public void setTriggerLongSwipe(boolean triggerLongSwipe) {
-        if (mPostCommitAnimationInProgress) {
-            return;
-        }
-        mTriggerLongSwipe = triggerLongSwipe;
-    }
-
     private void setSwipeThresholds(
             float linearDistance,
             float maxDistance,
@@ -733,13 +716,6 @@ public class BackAnimationController implements RemoteCallable<BackAnimationCont
             // This can happen when an unfinished gesture has been reset in resetTouchTracker
             ProtoLog.d(WM_SHELL_BACK_PREVIEW,
                     "onGestureFinished called while no gesture is started");
-            return;
-        }
-        if (mTriggerLongSwipe) {
-            // Let key event handlers deal with back long swipe gesture
-            sendEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_BACK, KeyEvent.FLAG_LONG_SWIPE);
-            sendEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_BACK, KeyEvent.FLAG_LONG_SWIPE);
-            finishBackNavigation(false);
             return;
         }
         boolean triggerBack = activeTouchTracker.getTriggerBack();
@@ -784,18 +760,6 @@ public class BackAnimationController implements RemoteCallable<BackAnimationCont
             return;
         }
         startPostCommitAnimation();
-    }
-
-    private boolean sendEvent(int action, int code, int flags) {
-        long when = SystemClock.uptimeMillis();
-        final KeyEvent ev = new KeyEvent(when, when, action, code, 0 /* repeat */,
-                0 /* metaState */, KeyCharacterMap.VIRTUAL_KEYBOARD, 0 /* scancode */,
-                flags | KeyEvent.FLAG_FROM_SYSTEM | KeyEvent.FLAG_VIRTUAL_HARD_KEY,
-                InputDevice.SOURCE_KEYBOARD);
-
-        ev.setDisplayId(mContext.getDisplay().getDisplayId());
-        return InputManager.getInstance().injectInputEvent(
-                ev, InputManager.INJECT_INPUT_EVENT_MODE_ASYNC);
     }
 
     /**
@@ -894,7 +858,7 @@ public class BackAnimationController implements RemoteCallable<BackAnimationCont
             mBackNavigationInfo.onBackNavigationFinished(triggerBack);
             mBackNavigationInfo = null;
         }
-        mTriggerLongSwipe = false;
+        mTriggerBack = false;
     }
 
     private void startLatencyTracking() {
