@@ -181,10 +181,6 @@ internal constructor(
 
     private val failsafeRunnable = Runnable { onFailsafe() }
 
-    private var longSwipeThreshold = 0f
-    private var triggerLongSwipe = false
-    private var isLongSwipeEnabled = false
-
     private var backArrowVisibility = false
 
     private var edgeHapticEnabled = false
@@ -312,16 +308,13 @@ internal constructor(
                 startIsLeft = mView.isLeftPanel
                 hasPassedDragSlop = false
                 mView.resetStretch()
-                mView.triggerLongSwipe = false
             }
             MotionEvent.ACTION_MOVE -> {
                 if (dragSlopExceeded(event.x, startX)) {
-                    mView.triggerLongSwipe = triggerLongSwipe
                     handleMoveEvent(event)
                 }
             }
             MotionEvent.ACTION_UP -> {
-                mView.triggerLongSwipe = triggerLongSwipe
                 when (currentState) {
                     GestureState.ENTRY -> {
                         if (
@@ -379,7 +372,6 @@ internal constructor(
                 velocityTracker = null
             }
             MotionEvent.ACTION_CANCEL -> {
-                mView.triggerLongSwipe = triggerLongSwipe
                 // Receiving a CANCEL implies that something else intercepted
                 // the gesture, i.e., the user did not cancel their gesture.
                 // Therefore, disappear immediately, with minimum fanfare.
@@ -520,10 +512,6 @@ internal constructor(
                 GestureState.INACTIVE -> stretchInactiveBackIndicator(gestureProgress)
                 else -> {}
             }
-        }
-
-        if (isLongSwipeEnabled) {
-            setTriggerLongSwipe(abs(xTranslation) > longSwipeThreshold)
         }
 
         setArrowStrokeAlpha(gestureProgress)
@@ -682,37 +670,12 @@ internal constructor(
         windowManager.addView(mView, layoutParams)
     }
 
-    override fun setLongSwipeEnabled(enabled: Boolean) {
-        longSwipeThreshold = if (enabled) MathUtils.min(
-            displaySize.x * 0.5f, layoutParams.width * 2.5f) else 0.0f
-        isLongSwipeEnabled = longSwipeThreshold > 0
-        setTriggerLongSwipe(isLongSwipeEnabled && triggerLongSwipe)
-    }
-
     override fun setBackArrowVisibility(enabled: Boolean) {
         backArrowVisibility = enabled
     }
 
     override fun setEdgeHapticEnabled(enabled: Boolean) {
         edgeHapticEnabled = enabled
-    }
-
-    private fun setTriggerLongSwipe(enabled: Boolean) {
-        if (triggerLongSwipe != enabled) {
-            triggerLongSwipe = enabled
-            if (edgeHapticEnabled) vibratorHelper.performHapticFeedback(
-                    mView,
-                    HapticFeedbackConstants.GESTURE_THRESHOLD_ACTIVATE
-            )
-            updateRestingArrowDimens()
-            // Whenever the trigger back state changes
-            // the existing translation animation should be cancelled
-            cancelFailsafe()
-            mView.cancelAnimations()
-            mView.triggerLongSwipe = triggerLongSwipe
-            updateConfiguration()
-            backCallback.setTriggerLongSwipe(triggerLongSwipe)
-        }
     }
 
     private fun isFlungAwayFromEdge(endX: Float, startX: Float = touchDeltaStartX): Boolean {
@@ -939,17 +902,13 @@ internal constructor(
             GestureState.COMMITTED -> {
                 // When flung, trigger back immediately but don't fire again
                 // once state resolves to committed.
-                if (previousState != GestureState.FLUNG) backCallback.triggerBack(false)
+                if (previousState != GestureState.FLUNG) backCallback.triggerBack()
             }
             GestureState.ENTRY,
             GestureState.INACTIVE -> {
-                setTriggerLongSwipe(false)
                 backCallback.setTriggerBack(false)
             }
             GestureState.ACTIVE -> {
-                if (triggerLongSwipe) {
-                    backCallback.triggerBack(false)
-                }
                 backCallback.setTriggerBack(true)
             }
             GestureState.GONE -> {}
