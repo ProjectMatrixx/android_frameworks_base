@@ -67,6 +67,8 @@ import com.android.systemui.util.ViewController;
 import com.android.systemui.util.concurrency.DelayableExecutor;
 import com.android.systemui.util.settings.SecureSettings;
 
+import com.android.systemui.afterlife.ClockStyle;
+
 import java.io.PrintWriter;
 import java.util.Locale;
 import java.util.function.Consumer;
@@ -522,6 +524,9 @@ public class KeyguardClockSwitchController extends ViewController<KeyguardClockS
         if (clock != null) {
             clock.getSmallClock().getEvents().onTimeTick();
             clock.getLargeClock().getEvents().onTimeTick();
+        }
+        if (mCustomClockFrame != null) {
+        	((ClockStyle) mCustomClockFrame).onTimeChanged();
         }
     }
 
