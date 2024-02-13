@@ -40,6 +40,7 @@
     <string name="screenrecord_skip_time_summary">Remove 3 second wait</string>
     <string name="screenrecord_hevc_switch_label">Enable HEVC</string>
     <string name="screenrecord_hevc_switch_summary">Use more efficient HEVC video encoding</string>
+    <string name="screenrecord_taps_summary">Taps on touch will be shown</string>
 
     <!-- Bluetooth dialog -->
     <string name="turn_on_bluetooth">Use Bluetooth</string>
