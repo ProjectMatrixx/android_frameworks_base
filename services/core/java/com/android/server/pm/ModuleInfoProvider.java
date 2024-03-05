@@ -234,4 +234,3 @@ public class ModuleInfoProvider {
         return mPackageName;
     }
 }
-
