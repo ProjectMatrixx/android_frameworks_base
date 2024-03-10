@@ -443,7 +443,7 @@ public class ImageHelper {
             e.printStackTrace();
         }
         ByteArrayOutputStream out = new ByteArrayOutputStream();
-        scaledBitmap.compress(Bitmap.CompressFormat.JPEG, 85, out);
+        scaledBitmap.compress(Bitmap.CompressFormat.JPEG, 90, out);
 
         byte[] byteArray = out.toByteArray();
 
