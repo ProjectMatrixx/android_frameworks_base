@@ -104,7 +104,7 @@ public class AmbientCustomImage extends FrameLayout {
            }
            output.flush();
            if (DEBUG) Log.i(TAG, "Saved ambient image " + " " + file.getAbsolutePath());
-       } catch (IOException e) {
+       } catch (Exception e) {
            Log.e(TAG, "Save ambient image failed " + " " + imageUri);
        }
    }
