@@ -114,8 +114,8 @@ public class AmbientCustomImage extends FrameLayout {
        File file = new File(mContext.getFilesDir(), AMBIENT_IMAGE_FILE_NAME);
        if (file.exists()) {
            if (DEBUG) Log.i(TAG, "Load ambient image");
-           final Bitmap image = BitmapFactory.decodeFile(file.getAbsolutePath());
-           mImage = new BitmapDrawable(mContext.getResources(), ImageHelper.resizeMaxDeviceSize(mContext, image));
+           final Bitmap image = ImageHelper.getCompressedBitmap(file.getAbsolutePath());
+           mImage = new BitmapDrawable(mContext.getResources(), image);
        }
    }
 
