@@ -6463,12 +6463,6 @@ public final class Settings {
          */
         public static final String WIFI_STANDARD_ICON = "wifi_standard_icon";
 
-        /**        
-         * Haptic feedback on volume panel
-         * @hide
-         */ 
-        public static final String VOLUME_PANEL_HAPTIC_FEEDBACK = "volume_panel_haptic_feedback";
-
         /**
          * Which Vibration Pattern to use
          * 0: dzzz-dzzz
