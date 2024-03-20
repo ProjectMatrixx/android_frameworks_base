@@ -7092,11 +7092,6 @@ public final class Settings {
         /**
          * @hide
          */
-        public static final String NAVIGATION_BAR_IME_SPACE = "navigation_bar_ime_space";
-
-        /**
-         * @hide
-         */
         public static final String CUSTOM_KEYGUARD_SHOW_BATTERY_BAR = "sysui_keyguard_show_battery_bar";
 
         /**
