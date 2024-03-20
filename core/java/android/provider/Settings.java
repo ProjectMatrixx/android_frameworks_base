@@ -7084,11 +7084,6 @@ public final class Settings {
         public static final String FLASHLIGHT_ON_CALL_RATE = "flashlight_on_call_rate";
 
         /**
-         * @hide
-         */
-        public static final String NAVIGATION_BAR_IME_SPACE = "navigation_bar_ime_space";
-
-        /**
          * Whether three fingers swipe is active
          * 0 = Inactive, 1 = Active
          * @hide
