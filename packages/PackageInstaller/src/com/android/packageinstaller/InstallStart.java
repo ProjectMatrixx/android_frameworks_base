@@ -58,6 +58,20 @@ public class InstallStart extends Activity {
     private boolean mShouldFinish = true;
 
     private final boolean mLocalLOGV = false;
+    static String callingApp;
+    
+    static Boolean isFromMarket()
+    {
+        if(callingApp != null && (callingApp.contains("market") || callingApp.contains("appstore"))){
+            return true;
+        }else if("com.tencent.android.qqdownloader".equals(callingApp)){
+            return true;
+        }else if("com.wandoujia.phoenix2".equals(callingApp)){
+            return true;
+        }else{
+            return false;
+        }
+    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -98,7 +112,7 @@ public class InstallStart extends Activity {
         if (callingUid == Process.INVALID_UID && sourceInfo == null) {
             mAbortInstall = true;
         }
-
+        callingApp = mPackageManager.getNameForUid(originatingUid);
         boolean isDocumentsManager = checkPermission(Manifest.permission.MANAGE_DOCUMENTS,
                 -1, callingUid) == PackageManager.PERMISSION_GRANTED;
         boolean isTrustedSource = false;
