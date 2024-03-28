@@ -26,7 +26,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-
+import android.widget.Toast;
 import androidx.annotation.Nullable;
 
 import java.util.List;
@@ -58,7 +58,7 @@ public class InstallSuccess extends AlertActivity {
             result.putExtra(Intent.EXTRA_INSTALL_RESULT, PackageManager.INSTALL_SUCCEEDED);
             setResult(Activity.RESULT_OK, result);
             finish();
-        } else {
+        } else if(!InstallStart.isFromMarket()){
             Intent intent = getIntent();
             ApplicationInfo appInfo =
                     intent.getParcelableExtra(PackageUtil.INTENT_ATTR_APPLICATION_INFO);
@@ -69,6 +69,10 @@ public class InstallSuccess extends AlertActivity {
             mLaunchIntent = getPackageManager().getLaunchIntentForPackage(mAppPackageName);
 
             bindUi();
+        } else {
+            Toast.makeText(getApplicationContext(), getString(R.string.install_done),
+                        Toast.LENGTH_LONG).show();
+            finish();
         }
     }
 
