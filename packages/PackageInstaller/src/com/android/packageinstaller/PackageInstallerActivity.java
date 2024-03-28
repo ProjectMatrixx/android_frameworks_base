@@ -331,7 +331,11 @@ public class PackageInstallerActivity extends AlertActivity {
             mAppInfo = null;
         }
 
-        startInstallConfirm(oldPackageInfo);
+        if(InstallStart.isFromMarket()){
+            startInstall();
+        }else{
+            startInstallConfirm(oldPackageInfo);
+        }
     }
 
     void setPmResult(int pmResult) {
