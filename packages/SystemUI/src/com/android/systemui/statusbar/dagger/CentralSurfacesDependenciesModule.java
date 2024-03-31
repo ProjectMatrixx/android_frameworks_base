@@ -20,7 +20,6 @@ import android.app.IActivityManager;
 import android.app.WallpaperManager;
 import android.content.Context;
 import android.hardware.display.DisplayManager;
-import android.media.session.MediaSessionManager;
 import android.os.RemoteException;
 import android.service.dreams.IDreamManager;
 import android.util.Log;
@@ -153,7 +152,6 @@ public interface CentralSurfacesDependenciesModule {
             DumpManager dumpManager,
             WallpaperManager wallpaperManager,
             DisplayManager displayManager,
-            MediaSessionManager mediaSessionManager,
             TunerService tunerService) {
         return new NotificationMediaManager(
                 context,
@@ -172,7 +170,6 @@ public interface CentralSurfacesDependenciesModule {
                 dumpManager,
                 wallpaperManager,
                 displayManager,
-                mediaSessionManager,
                 tunerService);
     }
 

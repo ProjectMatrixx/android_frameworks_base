@@ -84,10 +84,6 @@ public class LocalBluetoothAdapter {
 
     // Pass-through BluetoothAdapter methods that we can intercept if necessary
 
-    public BluetoothAdapter getAdapter() {
-        return mAdapter;
-    }
-
     public void cancelDiscovery() {
         mAdapter.cancelDiscovery();
     }
@@ -209,7 +205,7 @@ public class LocalBluetoothAdapter {
         return mState;
     }
 
-    public void setBluetoothStateInt(int state) {
+    void setBluetoothStateInt(int state) {
         synchronized(this) {
             if (mState == state) {
                 return;

@@ -25,7 +25,6 @@ import android.annotation.NonNull;
 import android.annotation.Nullable;
 import android.app.Notification;
 import android.app.WallpaperManager;
-import android.content.ComponentName;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Point;
@@ -36,12 +35,9 @@ import android.graphics.drawable.Icon;
 import android.hardware.display.DisplayManager;
 import android.media.MediaMetadata;
 import android.media.session.MediaController;
-import android.media.session.MediaController.TransportControls;
 import android.media.session.MediaSession;
-import android.media.session.MediaSessionManager;
 import android.media.session.PlaybackState;
 import android.os.AsyncTask;
-import android.os.UserHandle;
 import android.os.Trace;
 import android.provider.Settings;
 import android.service.notification.NotificationStats;
@@ -93,7 +89,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -165,7 +160,6 @@ public class NotificationMediaManager implements Dumpable, TunerService.Tunable 
     private MediaController mMediaController;
     private String mMediaNotificationKey;
     private MediaMetadata mMediaMetadata;
-    private final MediaSessionManager mMediaSessionManager;
 
     private String mNowPlayingNotificationKey;
     private String mNowPlayingTrack;
@@ -197,9 +191,9 @@ public class NotificationMediaManager implements Dumpable, TunerService.Tunable 
             }
             if (state != null) {
                 if (mIslandEnabled && mIslandNowPlayingEnabled) {
-                    if (mStatusBarStateController.getState() != KEYGUARD
-                        && !mStatusBarStateController.isDozing()
-                        && PlaybackState.STATE_PLAYING == getMediaControllerPlaybackState(mMediaController)
+                    if (mStatusBarStateController.getState() != KEYGUARD 
+                        && !mStatusBarStateController.isDozing() 
+                        && PlaybackState.STATE_PLAYING == getMediaControllerPlaybackState(mMediaController) 
                         && mMediaMetadata != null) {
                         notifUtils.showNowPlayingNotification(mMediaMetadata);
                     } else {
@@ -222,7 +216,7 @@ public class NotificationMediaManager implements Dumpable, TunerService.Tunable 
             mMediaArtworkProcessor.clearCache();
             mMediaMetadata = metadata;
             if (mIslandEnabled && mIslandNowPlayingEnabled) {
-                if (mStatusBarStateController.getState() != KEYGUARD
+                if (mStatusBarStateController.getState() != KEYGUARD 
                         && !mStatusBarStateController.isDozing()) {
                     notifUtils.showNowPlayingNotification(metadata);
                 }
@@ -252,7 +246,6 @@ public class NotificationMediaManager implements Dumpable, TunerService.Tunable 
             DumpManager dumpManager,
             WallpaperManager wallpaperManager,
             DisplayManager displayManager,
-            MediaSessionManager mediaSessionManager,
             TunerService tunerService) {
         mContext = context;
         mMediaArtworkProcessor = mediaArtworkProcessor;
@@ -270,7 +263,6 @@ public class NotificationMediaManager implements Dumpable, TunerService.Tunable 
         mColorExtractor = colorExtractor;
         mKeyguardStateController = keyguardStateController;
         mDisplayManager = displayManager;
-        mMediaSessionManager = mediaSessionManager;
         mIsLockscreenLiveWallpaperEnabled = wallpaperManager.isLockscreenLiveWallpaperEnabled();
 
         setupNotifPipeline();
@@ -582,7 +574,7 @@ public class NotificationMediaManager implements Dumpable, TunerService.Tunable 
         return a.controlsSameSession(b);
     }
 
-    public int getMediaControllerPlaybackState(MediaController controller) {
+    private int getMediaControllerPlaybackState(MediaController controller) {
         if (controller != null) {
             final PlaybackState playbackState = controller.getPlaybackState();
             if (playbackState != null) {
@@ -590,65 +582,6 @@ public class NotificationMediaManager implements Dumpable, TunerService.Tunable 
             }
         }
         return PlaybackState.STATE_NONE;
-    }
-
-    public boolean getPlaybackStateIsEqual(int state) {
-        if (mMediaController != null) {
-            int currentState = getMediaControllerPlaybackState(mMediaController);
-            return state == currentState;
-        }
-        return false;
-    }
-
-    public void playPauseTrack() {
-        if (mMediaSessionManager != null) {
-            Iterator it = mMediaSessionManager.getActiveSessionsForUser(null, UserHandle.CURRENT).iterator();
-
-            while (it.hasNext()) {
-                MediaController mediaController = (MediaController) it.next();
-                int controllerState = getMediaControllerPlaybackState(mediaController);
-
-                if (controllerState == PlaybackState.STATE_PLAYING) {
-                    mediaController.getTransportControls().pause();
-                    return;
-                } else if (controllerState == PlaybackState.STATE_PAUSED) {
-                    mediaController.getTransportControls().play();
-                    return;
-                }
-            }
-        }
-    }
-
-    public void skipTrackNext() {
-        if (mMediaSessionManager != null) {
-            Iterator it = mMediaSessionManager.getActiveSessionsForUser(null, UserHandle.CURRENT).iterator();
-
-            while (it.hasNext()) {
-                MediaController mediaController = (MediaController) it.next();
-                int controllerState = getMediaControllerPlaybackState(mediaController);
-
-                if (controllerState == PlaybackState.STATE_PLAYING || controllerState == PlaybackState.STATE_PAUSED) {
-                    mediaController.getTransportControls().skipToNext();
-                    return;
-                }
-            }
-        }
-    }
-
-    public void skipTrackPrevious() {
-        if (mMediaSessionManager != null) {
-            Iterator it = mMediaSessionManager.getActiveSessionsForUser(null, UserHandle.CURRENT).iterator();
-
-            while (it.hasNext()) {
-                MediaController mediaController = (MediaController) it.next();
-                int controllerState = getMediaControllerPlaybackState(mediaController);
-
-                if (controllerState == PlaybackState.STATE_PLAYING || controllerState == PlaybackState.STATE_PAUSED) {
-                    mediaController.getTransportControls().skipToPrevious();
-                    return;
-                }
-            }
-        }
     }
 
     private void clearCurrentMediaNotificationSession() {
@@ -944,10 +877,6 @@ public class NotificationMediaManager implements Dumpable, TunerService.Tunable 
 
     public void setBiometricUnlockController(BiometricUnlockController biometricUnlockController) {
         mBiometricUnlockController = biometricUnlockController;
-    }
-
-    public MediaController getMediaController() {
-        return mMediaController;
     }
 
     /**

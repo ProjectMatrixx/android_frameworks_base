@@ -86,8 +86,4 @@
          overlaid -->
     <dimen name="global_actions_button_size">72dp</dimen>
     <dimen name="global_actions_button_padding">26dp</dimen>
-
-    <!--  In landscape we need adjust it for dual notification shade
-          in regular screen look more better  -->
-    <dimen name="large_screen_shade_header_height">25dp</dimen>
 </resources>
