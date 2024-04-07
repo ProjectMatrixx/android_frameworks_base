@@ -25,7 +25,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.TypedArray;
-import android.graphics.Color;
 import android.graphics.Rect;
 import android.icu.lang.UCharacter;
 import android.icu.text.DateTimePatternGenerator;
@@ -120,8 +119,6 @@ public class Clock extends TextView implements
             "system:" + Settings.System.STATUS_BAR_CLOCK_COLOR;
     public static final String STATUS_BAR_CLOCK_FONT_STYLE =
             "system:" + Settings.System.STATUS_BAR_CLOCK_FONT_STYLE;
-    private static final String STATUSBAR_CLOCK_CHIP =
-            "system:" + Settings.System.STATUSBAR_CLOCK_CHIP;
 
     private int mClockSize;
     private int mClockSizeQsHeader;
@@ -162,7 +159,6 @@ public class Clock extends TextView implements
     private boolean mClockAutoHideLauncher = false;
     private boolean mClockVisibleByPolicy = true;
     private boolean mClockVisibleByUser = getVisibility() == View.VISIBLE;
-    private boolean mClockBgOn;
 
     private boolean mAttached;
     private boolean mScreenReceiverRegistered;
@@ -322,8 +318,7 @@ public class Clock extends TextView implements
                     STATUS_BAR_CLOCK_SIZE,
                     QS_HEADER_CLOCK_SIZE,
                     STATUS_BAR_CLOCK_FONT_STYLE,
-                    STATUS_BAR_CLOCK_COLOR,
-                    STATUSBAR_CLOCK_CHIP);
+                    STATUS_BAR_CLOCK_COLOR);
             mCommandQueue.addCallback(this);
             if (mShowDark) {
                 Dependency.get(DarkIconDispatcher.class).addDarkReceiver(this);
@@ -581,9 +576,6 @@ public class Clock extends TextView implements
                         TunerService.parseInteger(newValue, DEFAULT_CLOCK_COLOR);
                 updateClockColor();
                 break;
-            case STATUSBAR_CLOCK_CHIP:
-                mClockBgOn = TunerService.parseInteger(newValue, 0) > 0;
-                break;
             default:
                 break;
         }
@@ -610,7 +602,6 @@ public class Clock extends TextView implements
     @Override
     public void onDarkChanged(ArrayList<Rect> areas, float darkIntensity, int tint) {
         mNonAdaptedColor = DarkIconDispatcher.getTint(areas, this, tint);
-
         if (mClockColor == 0xFFFFFFFF) {
             setTextColor(mNonAdaptedColor);
         } else {
