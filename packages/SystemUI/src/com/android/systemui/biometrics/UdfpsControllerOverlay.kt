@@ -31,7 +31,7 @@ import android.hardware.biometrics.BiometricRequestConstants.RequestReason
 import android.hardware.fingerprint.IUdfpsOverlayControllerCallback
 import android.os.Build
 import android.os.RemoteException
-import android.os.UserHandle;
+import android.os.UserHandle
 import android.provider.Settings
 import android.util.Log
 import android.util.RotationUtils
@@ -42,6 +42,7 @@ import android.view.View
 import android.view.WindowManager
 import android.view.accessibility.AccessibilityManager
 import android.view.accessibility.AccessibilityManager.TouchExplorationStateChangeListener
+import android.text.TextUtils
 import androidx.annotation.LayoutRes
 import androidx.annotation.VisibleForTesting
 import com.android.keyguard.KeyguardUpdateMonitor
@@ -433,9 +434,17 @@ class UdfpsControllerOverlay @JvmOverloads constructor(
         val customUdfpsIcon = Settings.System.getIntForUser(context.contentResolver, 
             Settings.System.UDFPS_ICON, 0, UserHandle.USER_CURRENT) != 0
 
+        val customFpIconEnabled = Settings.System.getInt(context.contentResolver,
+            Settings.System.OMNI_CUSTOM_FP_ICON_ENABLED, 0) == 1
+
+	val customIconURI = Settings.System.getStringForUser(
+	    context.contentResolver, Settings.System.OMNI_CUSTOM_FP_ICON,
+	    UserHandle.USER_CURRENT)
+
         // Use expanded overlay unless touchExploration enabled
         var rotatedBounds =
-            if (customUdfpsIcon || (accessibilityManager.isTouchExplorationEnabled && isEnrollment)) {
+            if (customUdfpsIcon || (!TextUtils.isEmpty(customIconURI) && customFpIconEnabled)
+                || (accessibilityManager.isTouchExplorationEnabled && isEnrollment)) {
                 Rect(overlayParams.sensorBounds)
             } else {
                 Rect(
@@ -464,7 +473,7 @@ class UdfpsControllerOverlay @JvmOverloads constructor(
                     rot
                 )
 
-                if (!customUdfpsIcon) {
+                if (!customUdfpsIcon && !customFpIconEnabled) {
                     RotationUtils.rotateBounds(
                         sensorBounds,
                         overlayParams.naturalDisplayWidth,
