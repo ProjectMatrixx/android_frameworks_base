@@ -344,7 +344,7 @@ public class UdfpsKeyguardViewLegacy extends UdfpsAnimationView {
                     updateAlpha();
                     updateIcon();
 
-                    if (mCustomUdfpsIcon) {
+                    if (mCustomUdfpsIcon || (!TextUtils.isEmpty(customIconURI) && mCustomFpIconEnabled)) {
                         parent.addView(view);
                     } else {
                         final LayoutParams lp = (LayoutParams) view.getLayoutParams();
