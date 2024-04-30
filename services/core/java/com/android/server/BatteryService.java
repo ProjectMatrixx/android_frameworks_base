@@ -267,6 +267,7 @@ public final class BatteryService extends SystemService {
                 com.android.internal.R.bool.config_hasDashCharger) ||
                 mContext.getResources().getBoolean(com.android.internal.R.bool.config_hasWarpCharger) ||
                 mContext.getResources().getBoolean(com.android.internal.R.bool.config_hasVoocCharger) ||
+                mContext.getResources().getBoolean(com.android.internal.R.bool.config_hasSuperDartCharger) ||
                 mContext.getResources().getBoolean(com.android.internal.R.bool.config_hasTurboPowerCharger);
 
         mCriticalBatteryLevel = mContext.getResources().getInteger(
