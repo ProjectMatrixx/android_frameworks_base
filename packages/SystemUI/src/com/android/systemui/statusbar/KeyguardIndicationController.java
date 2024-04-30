@@ -232,6 +232,7 @@ public class KeyguardIndicationController {
     private boolean mHasDashCharger;
     private boolean mHasWarpCharger;
     private boolean mHasVoocCharger;
+    private boolean mHasSuperDartCharger;
 
     private IBatteryPropertiesRegistrar mBatteryPropertiesRegistrar;
     private boolean mAlternateFastchargeInfoUpdate;
@@ -394,6 +395,8 @@ public class KeyguardIndicationController {
                 com.android.internal.R.bool.config_hasWarpCharger);
         mHasVoocCharger = mContext.getResources().getBoolean(
                 com.android.internal.R.bool.config_hasVoocCharger);
+        mHasSuperDartCharger = mContext.getResources().getBoolean(
+                com.android.internal.R.bool.config_hasSuperDartCharger);
     }
 
     /** Call this after construction to finish setting up the instance. */
@@ -1230,6 +1233,10 @@ public class KeyguardIndicationController {
                         chargingId = hasChargingTime
                                 ? R.string.keyguard_indication_vooc_charging_time
                                 : R.string.keyguard_plugged_in_vooc_charging;
+                    } else if (mHasSuperDartCharger) {
+                        chargingId = hasChargingTime
+                                ? R.string.keyguard_indication_superdart_charging_time
+                                : R.string.keyguard_plugged_in_superdart_charging;
                     } else {
                         chargingId = hasChargingTime
                                 ? R.string.keyguard_indication_turbo_power_time
