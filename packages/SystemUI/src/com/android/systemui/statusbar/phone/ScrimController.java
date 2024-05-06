@@ -608,6 +608,10 @@ public class ScrimController implements ViewTreeObserver.OnPreDrawListener, Dump
     public ScrimState getState() {
         return mState;
     }
+    
+    public float getScrimBehindAlpha() {
+        return mScrimBehindAlphaKeyguard;
+    }
 
     /**
      * Sets the additional scrim behind alpha keyguard that would be blended with the default scrim
@@ -1097,6 +1101,7 @@ public class ScrimController implements ViewTreeObserver.OnPreDrawListener, Dump
                         AlarmTimeout.MODE_IGNORE_IF_SCHEDULED);
             });
         }
+        com.android.systemui.util.WallpaperDepthUtils.getInstance(mScrimBehind.getContext()).updateDepthWallpaper();
     }
 
     /**

@@ -748,6 +748,10 @@ public class QSImpl implements QS, CommandQueue.Callbacks, StatusBarStateControl
             mQsMediaHost.setSquishFraction(mSquishinessFraction);
         }
         updateMediaPositions();
+        
+        if (onKeyguard) {
+            com.android.systemui.util.WallpaperDepthUtils.getInstance(mRootView.getContext()).updateDepthWallpaper();
+        }
     }
 
     private void setAlphaAnimationProgress(float progress) {
