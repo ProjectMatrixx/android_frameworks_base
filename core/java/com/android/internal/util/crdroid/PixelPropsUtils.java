@@ -135,13 +135,13 @@ public final class PixelPropsUtils {
     private static final Map<String, String> DEFAULT_VALUES = Map.of(
         "BRAND", "google",
         "MANUFACTURER", "Google",
-        "DEVICE", "husky",
-        "FINGERPRINT", "google/husky_beta/husky:15/AP31.240517.022/11948202:user/release-keys",
-        "MODEL", "Pixel 8 Pro",
-        "PRODUCT", "husky_beta",
-        "DEVICE_INITIAL_SDK_INT", "21",
-        "SECURITY_PATCH", "2024-07-05",
-        "ID", "AP31.240617.009"
+        "DEVICE", "caiman",
+        "FINGERPRINT", "google/caiman/caiman:14/AD1A.240530.047.U1/12150698:user/release-keys",
+        "MODEL", "Pixel 9 Pro",
+        "PRODUCT", "caiman",
+        "DEVICE_INITIAL_SDK_INT", "34",
+        "SECURITY_PATCH", "2024-08-05",
+        "ID", "AD1A.240530.047.U1"
     );
 
     static {
