@@ -423,7 +423,7 @@ public final class PixelPropsUtils {
         for (Map.Entry<String, String> entry : DEFAULT_VALUES.entrySet()) {
             String propKey = PROP_HOOKS + entry.getKey();
             String value = SystemProperties.get(propKey);
-            setPropValue(entry.getKey(), value != null ? value : entry.getValue());
+            setPropValue(entry.getKey(), value != null && !value.isEmpty() ? value : entry.getValue());
         }
     }
 
