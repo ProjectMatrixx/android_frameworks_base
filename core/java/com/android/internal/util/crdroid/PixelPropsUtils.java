@@ -199,7 +199,6 @@ public class PixelPropsUtils {
         if (!SystemProperties.getBoolean(ENABLE_PROP_OPTIONS, true)) {
             return;
         }
-
         if (packageName == null || packageName.isEmpty()) {
             return;
         }
