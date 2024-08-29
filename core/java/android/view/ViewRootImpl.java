@@ -7234,9 +7234,9 @@ public final class ViewRootImpl implements ViewParent,
         private int processPointerEvent(QueuedInputEvent q) {
             final MotionEvent event = (MotionEvent)q.mEvent;
 
-            if (event.getPointerCount() == 3 && isThreeFingersSwipeActive()) {
+            if (event.getPointerCount() == 3 && isSwipeToScreenshotGestureActive()) {
                 event.setAction(MotionEvent.ACTION_CANCEL);
-                Log.d(mTag, "canceling motionEvent because of threeGesture detecting");
+                Log.d("teste", "canceling motionEvent because of threeGesture detecting");
             }
 
             // Translate the pointer event for compatibility, if needed.
@@ -12621,11 +12621,11 @@ public final class ViewRootImpl implements ViewParent,
         }
     }
 
-    private boolean isThreeFingersSwipeActive() {
+    private boolean isSwipeToScreenshotGestureActive() {
         try {
-            return ActivityManager.getService().isThreeFingersSwipeActive();
+            return ActivityManager.getService().isSwipeToScreenshotGestureActive();
         } catch (RemoteException e) {
-            Log.e(mTag, "isThreeFingersSwipeActive exception", e);
+            Log.e("teste", "isSwipeToScreenshotGestureActive exception", e);
             return false;
         }
     }
