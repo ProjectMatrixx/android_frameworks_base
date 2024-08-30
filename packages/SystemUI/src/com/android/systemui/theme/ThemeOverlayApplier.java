@@ -133,9 +133,6 @@ public class ThemeOverlayApplier implements Dumpable {
     @VisibleForTesting
     static final String OVERLAY_CATEGORY_QS_LANDSCAPE_LAYOUT =
             "android.theme.customization.qs_landscape_layout";
-    @VisibleForTesting
-    static final String OVERLAY_CATEGORY_QS_LANDSCAPE_CUTOUT =
-            "android.theme.customization.qs_landscape_cutout";
 
     /*
      * All theme customization categories used by the system, in order that they should be applied,
@@ -143,7 +140,6 @@ public class ThemeOverlayApplier implements Dumpable {
      */
     static final List<String> THEME_CATEGORIES = Lists.newArrayList(
             OVERLAY_CATEGORY_QS_LANDSCAPE_LAYOUT,
-            OVERLAY_CATEGORY_QS_LANDSCAPE_CUTOUT,
             OVERLAY_CATEGORY_SYSTEM_PALETTE,
             OVERLAY_CATEGORY_SHAPE,
             OVERLAY_CATEGORY_FONT,
@@ -163,7 +159,6 @@ public class ThemeOverlayApplier implements Dumpable {
     @VisibleForTesting
     static final Set<String> SYSTEM_USER_CATEGORIES = Sets.newHashSet(
             OVERLAY_CATEGORY_QS_LANDSCAPE_LAYOUT,
-            OVERLAY_CATEGORY_QS_LANDSCAPE_CUTOUT,
             OVERLAY_CATEGORY_SYSTEM_PALETTE,
             OVERLAY_CATEGORY_ACCENT_COLOR,
             OVERLAY_CATEGORY_DYNAMIC_COLOR,
@@ -207,7 +202,6 @@ public class ThemeOverlayApplier implements Dumpable {
         mTargetPackageToCategories.put(SETTINGS_PACKAGE,
                 Sets.newHashSet(OVERLAY_CATEGORY_ICON_SETTINGS, OVERLAY_CATEGORY_UI_STYLE_SETTINGS));
         mCategoryToTargetPackage.put(OVERLAY_CATEGORY_QS_LANDSCAPE_LAYOUT, SYSUI_PACKAGE);
-        mCategoryToTargetPackage.put(OVERLAY_CATEGORY_QS_LANDSCAPE_CUTOUT, ANDROID_PACKAGE);
         mCategoryToTargetPackage.put(OVERLAY_CATEGORY_ACCENT_COLOR, ANDROID_PACKAGE);
         mCategoryToTargetPackage.put(OVERLAY_CATEGORY_DYNAMIC_COLOR, ANDROID_PACKAGE);
         mCategoryToTargetPackage.put(OVERLAY_CATEGORY_FONT, ANDROID_PACKAGE);
