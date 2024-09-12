@@ -99,6 +99,7 @@ public class MobileSignalController extends SignalController<MobileState, Mobile
     boolean mInflateSignalStrengths = false;
     @VisibleForTesting
     final MobileStatusTracker mMobileStatusTracker;
+    private final TunerService mTunerService;
 
     // Save the previous STATUS_HISTORY_SIZE states for logging.
     private final String[] mMobileStatusHistory = new String[STATUS_HISTORY_SIZE];
@@ -217,8 +218,7 @@ public class MobileSignalController extends SignalController<MobileState, Mobile
         SettingsObserver settingsObserver = new SettingsObserver(mHandler);
         settingsObserver.observe();
 
-        Dependency.get(TunerService.class).addTunable(this, DATA_DISABLED_ICON);
-        Dependency.get(TunerService.class).addTunable(this, SHOW_FOURG_ICON);
+        mTunerService = Dependency.get(TunerService.class);
     }
 
     @Override
@@ -334,6 +334,8 @@ public class MobileSignalController extends SignalController<MobileState, Mobile
         } catch (ImsException exception) {
             Log.e(mTag, "failed to call registerImsStateCallback ", exception);
         }
+        mTunerService.addTunable(this, DATA_DISABLED_ICON);
+        mTunerService.addTunable(this, SHOW_FOURG_ICON);
     }
 
     // There is no listener to monitor whether the IMS service is ready, so we have to retry the
@@ -372,6 +374,7 @@ public class MobileSignalController extends SignalController<MobileState, Mobile
             Log.e(mTag, "unregisterListener: fail to call unregisterImsRegistrationCallback", e);
         }
         mImsMmTelManager.unregisterImsStateCallback(mImsStateCallback);
+        mTunerService.removeTunable(this);
     }
 
     private void updateInflateSignalStrength() {
