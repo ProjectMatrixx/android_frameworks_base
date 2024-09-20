@@ -226,6 +226,7 @@ public class NavigationBarInflaterView extends FrameLayout implements TunerServi
         mTunerService.addTunable(this, GESTURE_NAVBAR_RADIUS);
         mTunerService.addTunable(this, ENABLE_TASKBAR);
         mTunerService.addTunable(this, KEY_NAVIGATION_SPACE);
+        mIsAttachedToWindow = true;
     }
 
     @Override
