@@ -124,7 +124,8 @@ public class PixelPropsUtils {
             "com.google.android.googlequicksearchbox",
             "com.google.android.inputmethod.latin",
             "com.google.android.tts",
-            "com.google.android.wallpaper.effects"
+            "com.google.android.wallpaper.effects",
+            "com.realme.link"
         };
 
         if (Arrays.asList(packagesToSpoofAsMainlineDevice).contains(packageName) && !isExcludedProcess) {
