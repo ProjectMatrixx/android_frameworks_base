@@ -35,10 +35,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * @hide
- */
-public final class PixelPropsUtils {
+public class PixelPropsUtils {
 
     private static final String TAG = PixelPropsUtils.class.getSimpleName();
     private static final String PROP_HOOKS = "persist.sys.pihooks_";
@@ -106,13 +103,15 @@ public final class PixelPropsUtils {
         }
 
         boolean isPixelDevice = SystemProperties.get("ro.soc.manufacturer").equalsIgnoreCase("Google");
+        String model = SystemProperties.get("ro.product.model");
+        boolean isMainlineDevice = isPixelDevice && model.matches("Pixel [8-9][a-zA-Z ]*");
 
         Map<String, Object> propsToChange = new HashMap<>();
 
         final String processName = Application.getProcessName();
         boolean isExcludedProcess = processName != null && (processName.toLowerCase().contains("unstable"));
 
-        String[] packagesToChangePixel8Pro = {
+        String[] packagesToSpoofAsMainlineDevice = {
             "com.google.android.apps.aiwallpapers",
             "com.google.android.apps.bard",
             "com.google.android.apps.customization.pixel",
@@ -128,9 +127,9 @@ public final class PixelPropsUtils {
             "com.google.android.wallpaper.effects"
         };
 
-        if (Arrays.asList(packagesToChangePixel8Pro).contains(packageName) && !isExcludedProcess) {
+        if (Arrays.asList(packagesToSpoofAsMainlineDevice).contains(packageName) && !isExcludedProcess) {
             if (SystemProperties.getBoolean(SPOOF_PIXEL_GOOGLE_APPS, true)) {
-                if (!isPixelDevice) {
+                if (!isMainlineDevice) {
                     propsToChange.putAll(propsToChangeMainline);
                 }
             }
@@ -140,16 +139,19 @@ public final class PixelPropsUtils {
             if (SystemProperties.getBoolean(SPOOF_PIXEL_GPHOTOS, true)) {
                 propsToChange.putAll(propsToChangePixelXL);
             } else {
-                if (!isPixelDevice) {
-                if (processName.toLowerCase().contains("gservice")){
+                if (!isMainlineDevice) {
                         propsToChange.putAll(propsToChangePixel5a);
-                    }
                 }
             }
         }
         
         if (packageName.equals("com.snapchat.android")) {
             propsToChange.putAll(propsToChangePixelXL);
+        }
+
+        if (packageName.equals("com.google.android.settings.intelligence")) {
+            setPropValue("FINGERPRINT", "eng.nobody." + 
+                new java.text.SimpleDateFormat("yyyyMMdd.HHmmss").format(new java.util.Date()));
         }
 
         if (packageName.equals("com.google.android.gms")) {
@@ -306,6 +308,19 @@ public final class PixelPropsUtils {
             String propKey = PROP_HOOKS + entry.getKey();
             String value = SystemProperties.get(propKey);
             setPropValue(entry.getKey(), value != null && !value.isEmpty() ? value : entry.getValue());
+        }
+    }
+
+    private static boolean isCallerSafetyNet() {
+        return Arrays.stream(Thread.currentThread().getStackTrace())
+                        .anyMatch(elem -> elem.getClassName().toLowerCase()
+                            .contains("droidguard"));
+    }
+    public static void onEngineGetCertificateChain() {
+        // Check stack for SafetyNet or Play Integrity
+        if (isCallerSafetyNet()) {
+            Log.i(TAG, "Blocked key attestation");
+            throw new UnsupportedOperationException();
         }
     }
 
