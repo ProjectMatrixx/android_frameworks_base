@@ -318,7 +318,7 @@ public class PixelPropsUtils {
                             .contains("droidguard"));
     }
     public static void onEngineGetCertificateChain() {
-        if (!SystemProperties.getBoolean(SPOOF_PIXEL_PI, true))
+        if (!SystemProperties.getBoolean(SPOOF_PIXEL_GMS, true))
             return;
         // Check stack for SafetyNet or Play Integrity
         if ((isCallerSafetyNet() || sIsFinsky) && !sIsExcluded) {
