@@ -25,7 +25,6 @@ import android.content.pm.PackageInfo;
 import android.os.Build;
 import android.os.Process;
 import android.util.Log;
-import android.util.Slog;
 
 import com.android.internal.annotations.VisibleForTesting;
 import com.android.server.LocalServices;
@@ -138,7 +137,7 @@ public class WebViewLibraryLoader {
             if (!success) throw new Exception("Failed to start the relro file creator process");
         } catch (Throwable t) {
             // Log and discard errors as we must not crash the system server.
-            Slog.wtf(LOGTAG, "error starting relro file creator for abi " + abi, t);
+            Log.e(LOGTAG, "error starting relro file creator for abi " + abi, t);
             crashHandler.run();
         }
     }
