@@ -312,10 +312,8 @@ public class SystemImpl implements SystemInterface {
 
         ArrayList<String> apksToPin = new ArrayList<>();
         boolean pinSharedFirst = appInfo.metaData.getBoolean("PIN_SHARED_LIBS_FIRST", true);
-        if (appInfo.sharedLibraryFiles != null) {
-            for (String sharedLib : appInfo.sharedLibraryFiles) {
-                apksToPin.add(sharedLib);
-            }
+        for (String sharedLib : appInfo.sharedLibraryFiles) {
+            apksToPin.add(sharedLib);
         }
         apksToPin.add(appInfo.sourceDir);
         if (!pinSharedFirst) {
