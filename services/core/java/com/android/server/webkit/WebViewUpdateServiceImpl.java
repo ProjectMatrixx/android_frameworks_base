@@ -23,7 +23,6 @@ import android.content.pm.Signature;
 import android.os.AsyncTask;
 import android.os.Trace;
 import android.os.UserHandle;
-import android.util.AndroidRuntimeException;
 import android.util.Slog;
 import android.webkit.UserPackage;
 import android.webkit.WebViewFactory;
@@ -389,15 +388,9 @@ class WebViewUpdateServiceImpl implements WebViewUpdateServiceInterface {
 
     @Override
     public WebViewProviderInfo getDefaultWebViewPackage() {
-        for (WebViewProviderInfo provider : getWebViewPackages()) {
-            if (provider.availableByDefault) {
-                return provider;
-            }
-        }
-
-        // This should be unreachable because the config parser enforces that there is at least
-        // one availableByDefault provider.
-        throw new AndroidRuntimeException("No available by default WebView Provider.");
+        throw new IllegalStateException(
+                "getDefaultWebViewPackage shouldn't be called if update_service_v2 flag is"
+                        + " disabled.");
     }
 
     private static class ProviderAndPackageInfo {
